@@ -1,3 +1,3 @@
 # COCOA: artificial collective behavior
 
-COCOA is a generator of collective behavior (*COmportemnt COllectif Artificiel* in French).
+COCOA (*COmportemnt COllectif Artificiel* in French) is a generator of collective behavior.
