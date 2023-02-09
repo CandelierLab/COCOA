@@ -2,6 +2,8 @@ from PyQt5.QtCore import Qt, QObject, pyqtSignal, QTimer, QElapsedTimer, QPointF
 from PyQt5.QtGui import QKeySequence, QPalette, QColor, QPainter, QPen, QBrush, QPolygonF, QFont, QPainterPath
 from PyQt5.QtWidgets import QApplication, QWidget, QShortcut, QGridLayout, QHBoxLayout, QVBoxLayout, QFormLayout, QPushButton, QGraphicsScene, QGraphicsView, QAbstractGraphicsShapeItem, QGraphicsItem, QGraphicsItemGroup, QGraphicsTextItem, QGraphicsLineItem, QGraphicsEllipseItem, QGraphicsPolygonItem, QGraphicsRectItem, QGraphicsPathItem
 
+from Animation import Animation
+
 class Window(QWidget):
   
   def __init__(self):
@@ -16,12 +18,16 @@ class Window(QWidget):
 
     self.language = 'fr'
 
+    # --- Animation --------------------------------------------------------
+
+    self.animation = Animation()
+
     # --- Layout -----------------------------------------------------------
 
     hLay = QHBoxLayout()
 
-    hLay.addWidget(QPushButton('ok'),0)
-    hLay.addWidget(QPushButton('2'),1)
+    hLay.addWidget(QPushButton('ok'), 0)
+    hLay.addWidget(self.animation.view, 1)
 
     hLay.setStretch(0, 78)
     hLay.setStretch(1, 100)
@@ -52,7 +58,9 @@ class Window(QWidget):
     self.shortcut['esc'] = QShortcut(QKeySequence('Esc'), self)
     self.shortcut['esc'].activated.connect(self.app.quit)
 
-    self.show()    
+    self.show()
+    self.animation.startAnimation()
+    
     self.app.exec()
 
   def setLanguage(self):
