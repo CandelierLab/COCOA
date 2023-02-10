@@ -20,6 +20,20 @@ class Window(QWidget):
     # Default language
     self.language = 'fr'
 
+    # Style
+    self.app.setStyleSheet(qdarkstyle.load_stylesheet())
+
+    # --- Fullscreen
+    
+    # Check screen size
+    screen = self.app.primaryScreen()
+    if screen.size().width()>=3840:
+      f = 2
+      self.setGeometry(0,0,1920*f, 1080*f)      
+    else:
+      f = 1
+      self.setWindowState(Qt.WindowFullScreen)
+
     # --- Animation --------------------------------------------------------
 
     self.animation = Animation(N)
@@ -80,17 +94,18 @@ class Window(QWidget):
     self.tType.addTab(tVicsek, '')
     self.tType.addTab(tANN, '')
 
-    self.tType.setCurrentIndex(1)
+    # self.tType.setCurrentIndex(1)
 
     # --- Vicsek agents
 
     lVicsek = QVBoxLayout()
-    lVicsek.addSpacing(20)
+    lVicsek.addSpacing(50)
 
     iVicsek = QLabel()
-    iVicsek.setPixmap(QPixmap('Images/fr.png'))
+    iVicsek.setPixmap(QPixmap('Images/Vicsek.png').scaledToHeight(400))
+    iVicsek.setAlignment(Qt.AlignCenter)
     lVicsek.addWidget(iVicsek)
-    lVicsek.addSpacing(20)
+    lVicsek.addSpacing(50)
 
     self.tVicsek = QLabel()
     lVicsek.addWidget(self.tVicsek)
@@ -257,21 +272,6 @@ class Window(QWidget):
 
     # --- Settings ---------------------------------------------------------
 
-    # Style
-    self.app.setStyleSheet(qdarkstyle.load_stylesheet())
-
-    # Language
-    self.setLanguage()
-
-    # --- Fullscreen
-    
-    # Check screen size
-    screen = self.app.primaryScreen()
-    if screen.size().width()>=3840:
-      self.setGeometry(0,0,3840,2160)
-    else:
-      self.setWindowState(Qt.WindowFullScreen)
-
     # --- Shortcuts
 
     self.shortcut = {}
@@ -280,9 +280,14 @@ class Window(QWidget):
     self.shortcut['esc'] = QShortcut(QKeySequence('Esc'), self)
     self.shortcut['esc'].activated.connect(self.app.quit)
 
+    # --- Language
+
+    self.setLanguage()
+
+    # --- Display
+
     self.show()
-    self.animation.startAnimation()       
-    
+    self.animation.startAnimation()
     self.app.exec()
 
   def setLanguage(self, language=None):
