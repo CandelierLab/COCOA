@@ -73,7 +73,7 @@ class Window(QWidget):
     self.sSpeed.setMinimum(0)
     self.sSpeed.setMaximum(100)
     self.sSpeed.setSingleStep(1)
-    self.sSpeed.setValue(50)
+    self.sSpeed.setValue(30)
     self.sSpeed.valueChanged.connect(self.animation.setSpeed)
     lParam.addWidget(self.sSpeed, 0, 1)
 
@@ -127,9 +127,9 @@ class Window(QWidget):
 
     self.sRadius = QSlider(Qt.Horizontal)
     self.sRadius.setMinimum(0)
-    self.sRadius.setMaximum(50*f)
+    self.sRadius.setMaximum(100)
     self.sRadius.setSingleStep(1)
-    self.sRadius.setValue(20)
+    self.sRadius.setValue(25)
     self.sRadius.valueChanged.connect(self.animation.setRadius)
     lVicsekParam.addWidget(self.sRadius, 0, 1)
 
@@ -314,7 +314,7 @@ class Window(QWidget):
 
         # --- Vicsek Agents
 
-        self.tVicsek.setText("Les agents de Viscek s'alignent par rapport à leurs voisins.")
+        self.tVicsek.setText("Les agents de Viscek s'alignent par rapport à leurs voisins proches:<br> ils prennent l'orientation moyenne de tous les agents situés dans un rayon <i>r</i> donné.")
 
         self.tRadius.setText("Rayon d'interaction")
 
