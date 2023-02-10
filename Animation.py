@@ -633,7 +633,7 @@ class Animation(Animation2d):
 
     # --- Engine
 
-    self.engine.agents.add(N, 'Blind', v=0.01, sigma=0)
+    self.engine.agents.add(N, 'Blind', v=0.01, sigma=0.05)
 
     # --- Animation
 
@@ -656,6 +656,11 @@ class Animation(Animation2d):
     self.engine.step()
 
     for i in range(self.N):
+
+      # Position
       x = self.engine.agents.list[i].x
       y = self.engine.agents.list[i].y
       self.item[i].position = [x, y]
+
+      # Orientation
+      self.item[i].orientation = self.engine.agents.list[i].a

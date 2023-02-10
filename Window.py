@@ -1,6 +1,7 @@
 from PyQt5.QtCore import Qt, QObject, pyqtSignal, QTimer, QElapsedTimer, QPointF, QRectF
 from PyQt5.QtGui import QKeySequence, QPalette, QColor, QPainter, QPen, QBrush, QPolygonF, QFont, QPainterPath
 from PyQt5.QtWidgets import QApplication, QWidget, QShortcut, QGridLayout, QHBoxLayout, QVBoxLayout, QFormLayout, QPushButton, QGraphicsScene, QGraphicsView, QAbstractGraphicsShapeItem, QGraphicsItem, QGraphicsItemGroup, QGraphicsTextItem, QGraphicsLineItem, QGraphicsEllipseItem, QGraphicsPolygonItem, QGraphicsRectItem, QGraphicsPathItem
+import qdarkstyle
 
 from Animation import Animation
 
@@ -39,7 +40,8 @@ class Window(QWidget):
     self.setLanguage()
 
     # Background color
-    # self.setStyleSheet("background-color: black;")
+    self.app.setStyleSheet(qdarkstyle.load_stylesheet())
+    # self.setStyleSheet("background-color: #222;")
 
     # --- Fullscreen
     
