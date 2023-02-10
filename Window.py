@@ -45,12 +45,12 @@ class Window(QWidget):
     lShuffle = QHBoxLayout()
 
     self.bShuffle = QPushButton()
-    self.bShuffle.setFixedHeight(100)
+    self.bShuffle.setFixedHeight(50*f)
 
     self.bRandom = QPushButton()
-    self.bRandom.setFixedHeight(100)
+    self.bRandom.setFixedHeight(50*f)
 
-    lShuffle.addStretch(5)
+    lShuffle.addStretch(6)
     lShuffle.addWidget(self.bShuffle, 10)
     lShuffle.addWidget(self.bRandom, 10)
     lShuffle.addStretch(1)
@@ -61,19 +61,19 @@ class Window(QWidget):
 
     # Speed
     self.tSpeed = QLabel()
-    self.tSpeed.setFixedHeight(100)
+    self.tSpeed.setFixedHeight(50*f)
     lParam.addWidget(self.tSpeed, 0, 0)
 
     self.sSpeed = QSlider(Qt.Horizontal)
     self.sSpeed.setMinimum(0)
-    self.sSpeed.setMaximum(100)
+    self.sSpeed.setMaximum(50*f)
     self.sSpeed.setSingleStep(1)
     self.sSpeed.setValue(20)
     lParam.addWidget(self.sSpeed, 0, 1)
 
     # Orientational noise
     self.tSigma = QLabel()
-    self.tSigma.setFixedHeight(100)
+    self.tSigma.setFixedHeight(50*f)
     lParam.addWidget(self.tSigma, 1, 0)
 
     self.sSigma = QSlider(Qt.Horizontal)
@@ -86,7 +86,7 @@ class Window(QWidget):
     # --- Agents type
 
     self.tType = QTabWidget()
-    self.tType.setStyleSheet("QTabBar::tab { padding: 30px 50px;}")
+    self.tType.setStyleSheet("QTabBar::tab { padding: 15px 25px;}")
 
     tVicsek = QWidget(self.tType)
     tANN = QWidget()
@@ -99,40 +99,40 @@ class Window(QWidget):
     # --- Vicsek agents
 
     lVicsek = QVBoxLayout()
-    lVicsek.addSpacing(50)
+    lVicsek.addSpacing(25*f)
 
     iVicsek = QLabel()
-    iVicsek.setPixmap(QPixmap('Images/Vicsek.png').scaledToHeight(400))
+    iVicsek.setPixmap(QPixmap('Images/Vicsek.png').scaledToHeight(200*f))
     iVicsek.setAlignment(Qt.AlignCenter)
     lVicsek.addWidget(iVicsek)
-    lVicsek.addSpacing(50)
+    lVicsek.addSpacing(25*f)
 
     self.tVicsek = QLabel()
     lVicsek.addWidget(self.tVicsek)
-    lVicsek.addSpacing(50)
+    lVicsek.addSpacing(25*f)
 
     lVicsekParam = QGridLayout()
     
     # Radius of interaction
     self.tRadius = QLabel()
-    self.tRadius.setFixedHeight(100)
+    self.tRadius.setFixedHeight(50*f)
     lVicsekParam.addWidget(self.tRadius, 0, 0)
 
     self.sRadius = QSlider(Qt.Horizontal)
     self.sRadius.setMinimum(0)
-    self.sRadius.setMaximum(100)
+    self.sRadius.setMaximum(50*f)
     self.sRadius.setSingleStep(1)
     self.sRadius.setValue(20)
     lVicsekParam.addWidget(self.sRadius, 0, 1)
 
     # Alignment
     self.tAlign = QLabel()
-    self.tAlign.setFixedHeight(100)
+    self.tAlign.setFixedHeight(50*f)
     lVicsekParam.addWidget(self.tAlign, 1, 0)
 
     self.sAlign = QSlider(Qt.Horizontal)
     self.sAlign.setMinimum(0)
-    self.sAlign.setMaximum(100)
+    self.sAlign.setMaximum(50*f)
     self.sAlign.setSingleStep(1)
     self.sAlign.setValue(20)
     lVicsekParam.addWidget(self.sAlign, 1, 1)
@@ -144,36 +144,36 @@ class Window(QWidget):
     # --- ANN agents
 
     lANN = QVBoxLayout()
-    lANN.addSpacing(20)
+    lANN.addSpacing(10*f)
 
     iANN = QLabel()
     iANN.setPixmap(QPixmap('Images/fr.png'))
     lANN.addWidget(iANN)
-    lANN.addSpacing(20)
+    lANN.addSpacing(10*f)
 
     self.tANN = QLabel()
     lANN.addWidget(self.tANN)
-    lANN.addSpacing(50)
+    lANN.addSpacing(25*f)
 
     lANNSettings = QHBoxLayout()
 
     self.cSym = QCheckBox()
     self.cSym.setChecked(True)
-    self.cSym.setStyleSheet("QCheckBox::indicator { width: 50px; height: 50px;}")
+    self.cSym.setStyleSheet("QCheckBox::indicator { width: 25px; height: 25px;}")
     lANNSettings.addWidget(self.cSym)
 
     self.bReset = QPushButton()
-    self.bReset.setFixedSize(QSize(500,50))
+    self.bReset.setFixedSize(QSize(250*f, 25*f))
     lANNSettings.addWidget(self.bReset)
 
     lANN.addLayout(lANNSettings)
-    lANN.addSpacing(20)
+    lANN.addSpacing(10*f)
 
     lANNParam = QGridLayout()
     
     # W1
     tw1 = QLabel("<span style='font-family: Serif'><i>w<sub>1</sub></i></span> =")
-    tw1.setFixedHeight(100)
+    tw1.setFixedHeight(50*f)
     lANNParam.addWidget(tw1, 0, 0)
 
     self.lw1 = QLabel('0.00')
@@ -188,7 +188,7 @@ class Window(QWidget):
 
     # W2
     tw2 = QLabel("<span style='font-family: Serif'><i>w<sub>2</sub></i></span> =")
-    tw2.setFixedHeight(100)
+    tw2.setFixedHeight(50*f)
     lANNParam.addWidget(tw2, 1, 0)
 
     self.lw2 = QLabel('0.00')
@@ -203,7 +203,7 @@ class Window(QWidget):
 
     # W3
     tw3 = QLabel("<span style='font-family: Serif'><i>w<sub>3</sub></i></span> =")
-    tw3.setFixedHeight(100)
+    tw3.setFixedHeight(50*f)
     lANNParam.addWidget(tw3, 2, 0)
 
     self.lw3 = QLabel('0.00')
@@ -218,7 +218,7 @@ class Window(QWidget):
 
     # W4
     tw4 = QLabel("<span style='font-family: Serif'><i>w<sub>4</sub></i></span> =")
-    tw4.setFixedHeight(100)
+    tw4.setFixedHeight(50*f)
     lANNParam.addWidget(tw4, 3, 0)
 
     self.lw4 = QLabel('0.00')
@@ -240,9 +240,9 @@ class Window(QWidget):
     lMenu = QVBoxLayout()
 
     lMenu.addLayout(lShuffle)
-    lMenu.addSpacing(100)
+    lMenu.addSpacing(50*f)
     lMenu.addLayout(lParam)
-    lMenu.addSpacing(100)
+    lMenu.addSpacing(50*f)
     lMenu.addWidget(self.tType)
     lMenu.addStretch(1)
     
@@ -262,12 +262,12 @@ class Window(QWidget):
     
     bEn = QPushButton('', self)
     bEn.setStyleSheet("background-image : url('Images/en.png')")
-    bEn.setGeometry(20, 20, 70, 47)   
+    bEn.setGeometry(10*f, 10*f, 70, 47)   
     bEn.clicked.connect(lambda: self.setLanguage('en'))
 
     bFr = QPushButton('', self)    
     bFr.setStyleSheet("background-image : url('Images/fr.png')")
-    bFr.setGeometry(110, 20, 70, 47)
+    bFr.setGeometry(70+20*f, 10*f, 70, 47)
     bFr.clicked.connect(lambda: self.setLanguage('fr'))
 
     # --- Settings ---------------------------------------------------------
