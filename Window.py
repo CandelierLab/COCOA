@@ -37,6 +37,7 @@ class Window(QWidget):
     # --- Animation --------------------------------------------------------
 
     self.animation = Animation(N)
+    self.animation.randomize()
 
     # --- Layouts & Widgets ------------------------------------------------
 
@@ -46,9 +47,11 @@ class Window(QWidget):
 
     self.bShuffle = QPushButton()
     self.bShuffle.setFixedHeight(50*f)
+    self.bShuffle.setCheckable(True)
 
     self.bRandom = QPushButton()
     self.bRandom.setFixedHeight(50*f)
+    self.bRandom.clicked.connect(self.animation.randomize)
 
     lShuffle.addStretch(6)
     lShuffle.addWidget(self.bShuffle, 10)

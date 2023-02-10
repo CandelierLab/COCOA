@@ -86,7 +86,6 @@ class agent:
       self.y = initial_position[1]
       self.a = initial_position[2]
 
-
     # Polar coordinates
     self.rho = None
     self.theta = None
@@ -397,21 +396,6 @@ class Engine:
 
     # Density estimation lengths
     self.kde_sigma = {'pos': 0.1, 'ang':np.pi/10}
-
-  def input(self, dfile):
-
-    # Data source
-    self.data_in = dfile
-
-    # Add agents
-    self.agents.add(self.data_in.Nagents, 'Data_in', dataFile = self.data_in)
-
-  def setup_display(self):
-    '''
-    Define a display object
-    '''
-
-    self.display = simulation.display.visu(self, box=self.box)
 
   def step(self):
     '''

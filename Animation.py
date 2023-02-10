@@ -1,4 +1,5 @@
 import numpy as np
+import colorsys
 
 from PyQt5.QtCore import Qt, QObject, pyqtSignal, QTimer, QElapsedTimer, QPointF, QRectF
 from PyQt5.QtGui import QKeySequence, QPalette, QColor, QPainter, QPen, QBrush, QPolygonF, QFont, QPainterPath
@@ -647,6 +648,21 @@ class Animation(Animation2d):
         points = [[s,0],[-s/2,s/2],[-s/2,-s/2]],
         colors = ['red', 'red']
       )
+
+  def randomize(self):
+
+    for i in range(self.N):
+
+      # Position
+      self.engine.agents.list[i].x = np.random.rand()
+      self.engine.agents.list[i].y = np.random.rand()
+
+      # Orientation
+      self.engine.agents.list[i].a = np.random.rand()*2*np.pi
+
+      # Colors
+      c = colorsys.hsv_to_rgb(self.engine.agents.list[i].x, 1, 1)
+      self.item[i].colors = [QColor(int(c[0]*255), int(c[1]*255), int(c[2]*255)), QColor(int(c[0]*255), int(c[1]*255), int(c[2]*255))]
 
   def update(self):
 
