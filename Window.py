@@ -37,7 +37,7 @@ class Window(QWidget):
     # --- Animation --------------------------------------------------------
 
     self.animation = Animation(self, N)
-    self.animation.randomize()
+    self.animation.shuffle()
 
     # --- Layouts & Widgets ------------------------------------------------
 
@@ -45,19 +45,19 @@ class Window(QWidget):
          
     lShuffle = QHBoxLayout()
 
+    self.bBlind = QPushButton()
+    self.bBlind.setFixedHeight(50*f)
+    self.bBlind.setCheckable(True)
+    self.bBlind.setChecked(True)
+    self.bBlind.toggled.connect(self.animation.blind)
+    
     self.bShuffle = QPushButton()
     self.bShuffle.setFixedHeight(50*f)
-    self.bShuffle.setCheckable(True)
-    self.bShuffle.setChecked(True)
-    self.bShuffle.toggled.connect(self.animation.shuffle)
-    
-    self.bRandom = QPushButton()
-    self.bRandom.setFixedHeight(50*f)
-    self.bRandom.clicked.connect(self.animation.randomize)
+    self.bShuffle.clicked.connect(self.animation.shuffle)
 
     lShuffle.addStretch(6)
+    lShuffle.addWidget(self.bBlind, 10)
     lShuffle.addWidget(self.bShuffle, 10)
-    lShuffle.addWidget(self.bRandom, 10)
     lShuffle.addStretch(1)
 
     # --- General parameters
@@ -71,7 +71,7 @@ class Window(QWidget):
 
     self.sSpeed = QSlider(Qt.Horizontal)
     self.sSpeed.setMinimum(0)
-    self.sSpeed.setMaximum(50*f)
+    self.sSpeed.setMaximum(100)
     self.sSpeed.setSingleStep(1)
     self.sSpeed.setValue(50)
     self.sSpeed.valueChanged.connect(self.animation.setSpeed)
@@ -257,13 +257,13 @@ class Window(QWidget):
     # --- Language buttons
     
     bEn = QPushButton('', self)
-    bEn.setStyleSheet("background-image : url('Images/en.png')")
-    bEn.setGeometry(10*f, 10*f, 70, 47)   
+    bEn.setStyleSheet("background-image : url('Images/en.png');")
+    bEn.setGeometry(10*f, 10*f, 35, 24)   
     bEn.clicked.connect(lambda: self.setLanguage('en'))
 
     bFr = QPushButton('', self)    
-    bFr.setStyleSheet("background-image : url('Images/fr.png')")
-    bFr.setGeometry(70+20*f, 10*f, 70, 47)
+    bFr.setStyleSheet("background-image : url('Images/fr.png');")
+    bFr.setGeometry(35+20*f, 10*f, 35, 24)
     bFr.clicked.connect(lambda: self.setLanguage('fr'))
 
     # --- Settings ---------------------------------------------------------
@@ -299,8 +299,8 @@ class Window(QWidget):
         self.setWindowTitle('Comportement Collectif Artificiel')
 
         # Randomization
-        self.bShuffle.setText('Mélanger')
-        self.bRandom.setText('Répartir aléatoirement')
+        self.bBlind.setText('Aveugler')
+        self.bShuffle.setText('Répartir aléatoirement')
 
         # Speed
         self.tSpeed.setText('Vitesse')
@@ -331,8 +331,8 @@ class Window(QWidget):
         self.setWindowTitle('Artificial Collective Behavior')
 
         # Randomization
+        self.bBlind.setText('Blind')
         self.bShuffle.setText('Shuffle')
-        self.bRandom.setText('Randomize')
 
         # Speed
         self.tSpeed.setText('Speed')

@@ -652,7 +652,6 @@ class Animation(Animation2d):
         colors = ['red', 'red']
       )
 
- 
   def update(self):
 
     # Superclass method
@@ -670,7 +669,17 @@ class Animation(Animation2d):
       # Orientation
       self.item[i].orientation = self.engine.agents.list[i].a
  
-  def randomize(self):
+  def blind(self):
+
+    if self.window.bBlind.isChecked():
+
+      self.engine.mode = 'Blind'
+
+    else:
+
+      self.engine.mode = 'Vicsek'
+
+  def shuffle(self):
 
     for i in range(self.N):
 
@@ -685,15 +694,6 @@ class Animation(Animation2d):
       c = colorsys.hsv_to_rgb(self.engine.agents.list[i].x, 1, 1)
       self.item[i].colors = [QColor(int(c[0]*255), int(c[1]*255), int(c[2]*255)), QColor(int(c[0]*255), int(c[1]*255), int(c[2]*255))]
 
-  def shuffle(self):
-
-    if self.window.bShuffle.isChecked():
-
-      self.engine.mode = 'Blind'
-
-    else:
-
-      self.engine.mode = 'Vicsek'
 
   def setSpeed(self):
 
