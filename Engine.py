@@ -1,7 +1,6 @@
 import random
 from math import *
 import numpy as np
-from collections import defaultdict
 import time
 
 # === Geometry =============================================================
@@ -10,11 +9,10 @@ class foop:
   '''
   Field of orientated points
   '''
-  def __init__(self, X, Y, A, box):
+  def __init__(self, X, Y, A):
     self.X = X
     self.Y = Y
     self.A = A
-    self.box = box
 
   def center(self, tx, ty, ta=0):
     '''
@@ -23,8 +21,8 @@ class foop:
     '''
 
     # Translation (with boundary conditions)
-    X = (self.X - tx + self.box/2) % self.box - self.box/2
-    Y = (self.Y - ty + self.box/2) % self.box - self.box/2
+    X = (self.X - tx + 1/2) % 1 - 1/2
+    Y = (self.Y - ty + 1/2) % 1 - 1/2
 
     # Rotation
     if ta!=0:
@@ -33,7 +31,7 @@ class foop:
       X = np.real(Z)
       Y = np.imag(Z)
 
-    return foop(X, Y, self.A-ta, self.box)
+    return foop(X, Y, self.A-ta)
 
   def near(self, r, include_self=False, blindlist=None):
     '''
@@ -68,18 +66,20 @@ class agent:
   Generic mobile agent (parent class)  
   '''
 
-  def __init__(self, v, sigma, box, damax=None, initial_position=None):
+  def __init__(self, engine, v=0.01, sigma=0.05, r=0.05, damax=None, initial_position=None):
 
     # Definitions
+
+    self.engine = engine
     self.v = v
-    self.damax = damax if damax is not None else np.pi/2
     self.sigma = sigma
-    self.box = box
+    self.r = r
+    self.damax = damax if damax is not None else np.pi/2
 
     # Initial position
     if initial_position is None:
-      self.x = random.random()*self.box
-      self.y = random.random()*self.box
+      self.x = random.random()
+      self.y = random.random()
       self.a = random.random()*2*np.pi
     else:
       self.x = initial_position[0]
@@ -131,13 +131,6 @@ class agent:
     # Find nearest neighbors
     I = C.near(0.5, blindlist=self.blindlist, include_self=include_self)
 
-    # Positional density
-    # self.density['pos'].append(np.sum(np.exp(-(np.abs(Z[I])/self.box/self.kde_sigma['pos'])**2/2)))
-    self.density['pos'].append(np.sum(np.exp(-(np.abs(Z[I])/self.kde_sigma['pos'])**2/2)))
-
-    # Angular density
-    self.density['ang'].append(np.sum(np.exp(-(np.angle(Z[I])/self.kde_sigma['ang'])**2/2)))
-
     # --- Polar coordinates
 
     # Find nearest neighbors
@@ -158,56 +151,33 @@ class agent:
     self.a += self.sigma*np.random.randn(1)
 
     # Position
-    self.x = ((self.x + self.v*np.cos(self.a)) % self.box)[0]
-    self.y = ((self.y + self.v*np.sin(self.a)) % self.box)[0]
+    self.x = ((self.x + self.v*np.cos(self.a)) % 1)[0]
+    self.y = ((self.y + self.v*np.sin(self.a)) % 1)[0]
 
-# === Blind agents =========================================================
-
-class Blind(agent):
-  '''
-  Blind agent, i.e. not taking the other agents into account 
-  '''
-
-  def __init__(self, v, sigma, box=1, initial_position=None):    
-    super().__init__(v, sigma, box, initial_position)
-    
   def update(self, i, F):
-    '''
-    Update angles and move
-    '''
-
-    # Update perception
-    I = self.perceive(i, F, reorient=False)
-
-    # Add angular noise and move
-    self.move()
-
-# === Vicsek agents ========================================================
-
-class Vicsek(agent):
-  '''
-  Vicsek agent
-  '''
-
-  def __init__(self, v, sigma, r, box=1, initial_position=None):    
-    super().__init__(v, sigma, box, initial_position)
-    self.r = r
     
-  def update(self, i, F):
-    '''
-    Update angles and move
-    '''
+    match self.engine.mode:
 
-    # Update perception
-    I = self.perceive(i, F, r=self.r, reorient=False, include_self=True)
-    
-    # Update angle
-    self.a = np.angle(np.exp(1j*F.A[I]).sum())
+      case 'Blind':
 
-    # Add angular noise and move
-    self.move()
+        # Update perception
+        I = self.perceive(i, F, reorient=False)
 
-    return self
+        # Add angular noise and move
+        self.move()
+
+      case 'Vicsek':
+
+        # Update perception
+        I = self.perceive(i, F, r=self.r, reorient=False, include_self=True)
+        
+        # Update angle
+        self.a = np.angle(np.exp(1j*F.A[I]).sum())
+
+        # Add angular noise and move
+        self.move()
+
+
 
 # === HENN-driven agents ====================================================
 
@@ -287,7 +257,6 @@ class Agents:
   def __init__(self, engine):
     self.N = 0
     self.list = []
-    self.groups = defaultdict(list)
         
     # Engine
     self.engine = engine
@@ -297,53 +266,18 @@ class Agents:
     s += 'N: ' + str(self.N)
     return s
 
-  def add(self, n, type, name=None, blinding=False, initial_disposition=None, damax_range=None, **kwargs):
+  def add(self, n, type):
     '''
     Add one or many agents
     '''
-
-    # Default name
-    if name is None:
-      name = type
-
-    # Update groups
-    alist = [*range(self.N,self.N+n)]
-    self.groups[name].extend(alist)
-
-    # --- Initial positions
-
-    if initial_disposition is None:
-      init_pos = [None]*n
-    else:
-      init_pos = []
-      a = ceil(sqrt(n))
-      d = 1/a
-      for k in range(n):
-        i = k // a
-        j = k % a
-        init_pos.append(((i+1/2)*d, (j+1/2)*d, 0))
         
     # Add agents
-    for i,k in enumerate(alist):
-
-      if damax_range is not None:
-        kwargs['damax'] = damax_range[0] + np.random.rand(1)*(damax_range[1]-damax_range[0])
-        
-      # Add the agent based on class name
-      AgentClass = globals()[type]
-      self.list.append(AgentClass(**kwargs, box=self.engine.box, initial_position=init_pos[i]))
-
-      self.list[k].kde_sigma = self.engine.kde_sigma
-
-      if blinding:
-        self.list[k].blindlist = alist
+    for i in range(n):
+      self.list.append(agent(self.engine))
 
     # Update agent count
-    self.N =  len(self.list)
+    self.N = n
     
-    if self.engine.verbose is not None:
-      print('→ Added {:d} {:s} agents ({:s}).'.format(n, type, name))
-
   def compile(self):
     '''
     Compile all positions and orientations
@@ -352,8 +286,7 @@ class Agents:
     return foop(
       np.array([A.x for A in self.list],dtype=object).flatten().astype(float),
       np.array([A.y for A in self.list],dtype=object).flatten().astype(float),
-      np.array([A.a for A in self.list],dtype=object).flatten().astype(float),
-      self.engine.box)
+      np.array([A.a for A in self.list],dtype=object).flatten().astype(float))
 
 # === Engine ===============================================================
 
@@ -365,14 +298,11 @@ class Engine:
   # Contructor
   def __init__(self, steps=None, data_in=None, data_out=None):
 
-    # Arena
-    self.box = 1
+    # Mode
+    self.mode = 'Blind'
 
     # Agents
     self.agents = Agents(self)
-    
-    # Display
-    self.display = None
 
     # --- Iterations
 
@@ -407,14 +337,6 @@ class Engine:
 
     # Prepare data
     F = self.agents.compile()
-
-    # --- Save data
-    
-    if self.data_out is not None:
-      F.save(self.data_out, step=self.iteration)
-
-    if self.display is not None:
-      self.display.update(self.iteration, F)
 
     # --- Update
 

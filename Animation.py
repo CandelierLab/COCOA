@@ -620,10 +620,13 @@ class Animation2d():
 
 class Animation(Animation2d):
 
-  def __init__(self, N):
+  def __init__(self, window, N):
 
     # Superclass constructor
     super().__init__()
+
+    # Associated window
+    self.window = window
 
     # Associated enine
     self.engine = Engine()
@@ -634,7 +637,7 @@ class Animation(Animation2d):
 
     # --- Engine
 
-    self.engine.agents.add(N, 'Blind', v=0.01, sigma=0.05)
+    self.engine.agents.add(N, 'Blind')
 
     # --- Animation
 
@@ -663,6 +666,16 @@ class Animation(Animation2d):
       # Colors
       c = colorsys.hsv_to_rgb(self.engine.agents.list[i].x, 1, 1)
       self.item[i].colors = [QColor(int(c[0]*255), int(c[1]*255), int(c[2]*255)), QColor(int(c[0]*255), int(c[1]*255), int(c[2]*255))]
+
+  def shuffle(self):
+
+    if self.window.bShuffle.isChecked():
+
+      self.engine.mode = 'Blind'
+
+    else:
+
+      self.engine.mode = 'Vicsek'
 
   def update(self):
 
