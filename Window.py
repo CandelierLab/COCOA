@@ -73,7 +73,8 @@ class Window(QWidget):
     self.sSpeed.setMinimum(0)
     self.sSpeed.setMaximum(50*f)
     self.sSpeed.setSingleStep(1)
-    self.sSpeed.setValue(20)
+    self.sSpeed.setValue(50)
+    self.sSpeed.valueChanged.connect(self.animation.setSpeed)
     lParam.addWidget(self.sSpeed, 0, 1)
 
     # Orientational noise
@@ -86,6 +87,7 @@ class Window(QWidget):
     self.sSigma.setMaximum(100)
     self.sSigma.setSingleStep(1)
     self.sSigma.setValue(20)
+    self.sSigma.valueChanged.connect(self.animation.setSigma)
     lParam.addWidget(self.sSigma, 1, 1)
     
     # --- Agents type
@@ -128,19 +130,8 @@ class Window(QWidget):
     self.sRadius.setMaximum(50*f)
     self.sRadius.setSingleStep(1)
     self.sRadius.setValue(20)
+    self.sRadius.valueChanged.connect(self.animation.setRadius)
     lVicsekParam.addWidget(self.sRadius, 0, 1)
-
-    # Alignment
-    self.tAlign = QLabel()
-    self.tAlign.setFixedHeight(50*f)
-    lVicsekParam.addWidget(self.tAlign, 1, 0)
-
-    self.sAlign = QSlider(Qt.Horizontal)
-    self.sAlign.setMinimum(0)
-    self.sAlign.setMaximum(50*f)
-    self.sAlign.setSingleStep(1)
-    self.sAlign.setValue(20)
-    lVicsekParam.addWidget(self.sAlign, 1, 1)
 
     lVicsek.addLayout(lVicsekParam)
 
@@ -326,7 +317,6 @@ class Window(QWidget):
         self.tVicsek.setText("Les agents de Viscek s'alignent par rapport à leurs voisins.")
 
         self.tRadius.setText("Rayon d'interaction")
-        self.tAlign.setText("Facteur d'alignement")
 
         # --- ANN agents
 
@@ -359,7 +349,6 @@ class Window(QWidget):
         self.tVicsek.setText("Les agents de Viscek s'alignent par rapport à leurs voisins.")
 
         self.tRadius.setText('Interaction radius')
-        self.tAlign.setText('Alignment factor')
 
         # --- ANN agents
 

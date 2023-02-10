@@ -66,7 +66,7 @@ class agent:
   Generic mobile agent (parent class)  
   '''
 
-  def __init__(self, engine, v=0.01, sigma=0.05, r=0.05, damax=None, initial_position=None):
+  def __init__(self, engine, v=0.01, sigma=0.1, r=0.04, damax=None, initial_position=None):
 
     # Definitions
 

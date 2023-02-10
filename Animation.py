@@ -652,6 +652,24 @@ class Animation(Animation2d):
         colors = ['red', 'red']
       )
 
+ 
+  def update(self):
+
+    # Superclass method
+    super().update()
+
+    self.engine.step()
+
+    for i in range(self.N):
+
+      # Position
+      x = self.engine.agents.list[i].x
+      y = self.engine.agents.list[i].y
+      self.item[i].position = [x, y]
+
+      # Orientation
+      self.item[i].orientation = self.engine.agents.list[i].a
+ 
   def randomize(self):
 
     for i in range(self.N):
@@ -677,19 +695,17 @@ class Animation(Animation2d):
 
       self.engine.mode = 'Vicsek'
 
-  def update(self):
-
-    # Superclass method
-    super().update()
-
-    self.engine.step()
+  def setSpeed(self):
 
     for i in range(self.N):
+      self.engine.agents.list[i].v = self.window.sSpeed.value()*0.0002
 
-      # Position
-      x = self.engine.agents.list[i].x
-      y = self.engine.agents.list[i].y
-      self.item[i].position = [x, y]
+  def setSigma(self):
 
-      # Orientation
-      self.item[i].orientation = self.engine.agents.list[i].a
+    for i in range(self.N):
+      self.engine.agents.list[i].sigma = self.window.sSigma.value()*0.005
+
+  def setRadius(self):
+
+    for i in range(self.N):
+      self.engine.agents.list[i].r = self.window.sRadius.value()*0.002
