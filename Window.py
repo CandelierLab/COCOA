@@ -48,7 +48,7 @@ class Window(QWidget):
     if screen.size().width()>=3840:
       self.setGeometry(0,0,3840,2160)
     else:
-      self.showMaximized()
+      self.setWindowState(Qt.WindowFullScreen)
 
     # --- Shortcuts
 
