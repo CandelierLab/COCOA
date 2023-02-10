@@ -4,6 +4,8 @@ from PyQt5.QtCore import Qt, QObject, pyqtSignal, QTimer, QElapsedTimer, QPointF
 from PyQt5.QtGui import QKeySequence, QPalette, QColor, QPainter, QPen, QBrush, QPolygonF, QFont, QPainterPath
 from PyQt5.QtWidgets import QApplication, QWidget, QShortcut, QGridLayout, QPushButton, QGraphicsScene, QGraphicsView, QAbstractGraphicsShapeItem, QGraphicsItem, QGraphicsItemGroup, QGraphicsTextItem, QGraphicsLineItem, QGraphicsEllipseItem, QGraphicsPolygonItem, QGraphicsRectItem, QGraphicsPathItem
 
+from Engine import Engine
+
 # === ITEMS ================================================================
 
 # --- Generic Item ---------------------------------------------------------
@@ -561,7 +563,7 @@ class Animation2d():
 
     # --- Animation
   
-    self.qtimer = QTimer()
+    self.qtimer = QTimer(self.view)
     self.qtimer.timeout.connect(self.update)
     self.timer = QElapsedTimer()
     
@@ -570,7 +572,7 @@ class Animation2d():
       self.box = QGraphicsRectItem(0,0,
         self.factor*self.boundaries['width'],
         -self.factor*self.boundaries['height'])
-      self.box.setPen(QPen(Qt.lightGray, 0)) 
+      # self.box.setPen(QPen(Qt.lightGray, 0)) 
       self.scene.addItem((self.box))
 
     # Time display
@@ -596,8 +598,8 @@ class Animation2d():
     
   def startAnimation(self):
     
+    self.qtimer.setSingleShot(False)
     self.qtimer.setInterval(int(1000/self.fps))
-    self.qtimer.timeout.connect(self.update)
     self.qtimer.start()
     self.timer.start()
       
@@ -613,27 +615,47 @@ class Animation2d():
     if self.disp_time:
       self.timeDisp.setPlainText('{:06.02f} sec'.format(self.t))
 
-    self.qtimer.timeout.connect(self.update)
-    self.qtimer.start()
-
 # --- Animation ------------------------------------------------------------
 
 class Animation(Animation2d):
 
-  def __init__(self):
+  def __init__(self, N):
 
+    # Superclass constructor
     super().__init__()
 
-    self.add(polygon, 'p', 
-      position = [0,0],
-      points = [[0.1,0.2],[0.2,0.2],[0.1,0.3],[0.1,0.2]],
-    )
+    # Associated enine
+    self.engine = Engine()
 
-    # print(self.item)
+    # --- Items ------------------------------------------------------------
+
+    self.N = N
+
+    # --- Engine
+
+    self.engine.agents.add(N, 'Blind', v=0.01, sigma=0)
+
+    # --- Animation
+
+    s = 0.01
+
+    for i in range(N):
+
+      self.add(polygon, i, 
+        position = [self.engine.agents.list[i].x, self.engine.agents.list[i].y],
+        orientation = self.engine.agents.list[i].a,
+        points = [[s,0],[-s/2,s/2],[-s/2,-s/2]],
+        colors = ['red', 'red']
+      )
 
   def update(self):
 
-    super().__init__(self)
+    # Superclass method
+    super().update()
 
-    print(self.t)
-    # self.item['p'].position = [self.t/10, self.t/10]
+    self.engine.step()
+
+    for i in range(self.N):
+      x = self.engine.agents.list[i].x
+      y = self.engine.agents.list[i].y
+      self.item[i].position = [x, y]

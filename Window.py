@@ -6,7 +6,7 @@ from Animation import Animation
 
 class Window(QWidget):
   
-  def __init__(self):
+  def __init__(self, N):
    
     # Qapplication
     self.app = QApplication([])
@@ -20,7 +20,7 @@ class Window(QWidget):
 
     # --- Animation --------------------------------------------------------
 
-    self.animation = Animation()
+    self.animation = Animation(N)
 
     # --- Layout -----------------------------------------------------------
 
@@ -59,7 +59,7 @@ class Window(QWidget):
     self.shortcut['esc'].activated.connect(self.app.quit)
 
     self.show()
-    self.animation.startAnimation()
+    self.animation.startAnimation()       
     
     self.app.exec()
 

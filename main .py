@@ -1,3 +1,3 @@
 from Window import *
 
-Window()
+Window(100)
