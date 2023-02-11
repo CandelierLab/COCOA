@@ -669,15 +669,13 @@ class Animation(Animation2d):
       # Orientation
       self.item[i].orientation = self.engine.agents.list[i].a
  
-  def blind(self):
+  def changeAgent(self):
 
-    if self.window.bBlind.isChecked():
+    match self.window.tType.currentIndex():
 
-      self.engine.mode = 'Blind'
-
-    else:
-
-      self.engine.mode = 'Vicsek'
+      case 0: self.engine.mode = 'Blind'
+      case 1: self.engine.mode = 'Vicsek'
+      case 2: self.engine.mode = 'ANN'
 
   def shuffle(self):
 

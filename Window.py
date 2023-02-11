@@ -45,19 +45,12 @@ class Window(QWidget):
          
     lShuffle = QHBoxLayout()
 
-    self.bBlind = QPushButton()
-    self.bBlind.setFixedHeight(50*f)
-    self.bBlind.setCheckable(True)
-    self.bBlind.setChecked(True)
-    self.bBlind.toggled.connect(self.animation.blind)
-    
     self.bShuffle = QPushButton()
     self.bShuffle.setFixedHeight(50*f)
     self.bShuffle.clicked.connect(self.animation.shuffle)
 
-    lShuffle.addStretch(6)
-    lShuffle.addWidget(self.bBlind, 10)
-    lShuffle.addWidget(self.bShuffle, 10)
+    lShuffle.addStretch(1)
+    lShuffle.addWidget(self.bShuffle, 1)
     lShuffle.addStretch(1)
 
     # --- General parameters
@@ -95,13 +88,33 @@ class Window(QWidget):
     self.tType = QTabWidget()
     self.tType.setStyleSheet("QTabBar::tab { padding: 15px 25px;}")
 
-    tVicsek = QWidget(self.tType)
+    tBlind = QWidget()
+    tVicsek = QWidget()
     tANN = QWidget()
-   
+
+    self.tType.addTab(tBlind, '')
     self.tType.addTab(tVicsek, '')
     self.tType.addTab(tANN, '')
 
+    
+    self.tType.currentChanged.connect(self.animation.changeAgent)
     # self.tType.setCurrentIndex(1)
+
+    # --- Blind agents
+
+    lBlind = QVBoxLayout()
+    lBlind.addSpacing(25*f)
+
+    iBlind = QLabel()
+    iBlind.setPixmap(QPixmap('Images/Blind.png').scaledToHeight(200*f))
+    iBlind.setAlignment(Qt.AlignCenter)
+    lBlind.addWidget(iBlind)
+    lBlind.addSpacing(25*f)
+
+    self.tBlind = QLabel()
+    lBlind.addWidget(self.tBlind)
+
+    tBlind.setLayout(lBlind)
 
     # --- Vicsek agents
 
@@ -299,7 +312,6 @@ class Window(QWidget):
         self.setWindowTitle('Comportement Collectif Artificiel')
 
         # Randomization
-        self.bBlind.setText('Aveugler')
         self.bShuffle.setText('Répartir aléatoirement')
 
         # Speed
@@ -309,18 +321,23 @@ class Window(QWidget):
         self.tSigma.setText("Bruit de réorientation")
 
         # Agents
-        self.tType.setTabText(0, 'Agents de Vicsek')
-        self.tType.setTabText(1, 'Réseaux de neurones artificiel')
+        self.tType.setTabText(0, 'Agents aveugles')
+        self.tType.setTabText(1, 'Agents de Vicsek')
+        self.tType.setTabText(2, 'Réseaux de neurones artificiel')
+
+        # --- Blind Agents
+
+        self.tBlind.setText("<p>Les agents aveugles ne percoivent pas leurs voisins, et ont des marches aléatoires indépendantes.</p>")
 
         # --- Vicsek Agents
 
-        self.tVicsek.setText("Les agents de Viscek s'alignent par rapport à leurs voisins proches:<br> ils prennent l'orientation moyenne de tous les agents situés dans un rayon <i>r</i> donné.")
-
+        self.tVicsek.setText("<p>Les agents de Viscek s'alignent par rapport à leurs voisins proches: à chaque instant ils prennent l'orientation<br><br>moyenne  de tous les agents situés dans un rayon <i>r</i> donné autour d'eux.</p>")
+        
         self.tRadius.setText("Rayon d'interaction")
 
         # --- ANN agents
 
-        self.tANN.setText("Les réseaux de neurones ont un champs perceptif radial.")
+        self.tANN.setText("<p>Les réseaux de neurones ont un champs perceptif radial.</p>")
 
         self.cSym.setText('Symétrisation')
         self.bReset.setText('Réinitialiser les poids')
@@ -331,8 +348,7 @@ class Window(QWidget):
         self.setWindowTitle('Artificial Collective Behavior')
 
         # Randomization
-        self.bBlind.setText('Blind')
-        self.bShuffle.setText('Shuffle')
+        self.bShuffle.setText('Shuffle agents')
 
         # Speed
         self.tSpeed.setText('Speed')
@@ -341,18 +357,23 @@ class Window(QWidget):
         self.tSigma.setText("Reorientation noise")
 
         # Agents
-        self.tType.setTabText(0, 'Vicsek agents')
-        self.tType.setTabText(1, 'Artificial neural networks')
+        self.tType.setTabText(0, 'Blind agents')
+        self.tType.setTabText(1, 'Vicsek agents')
+        self.tType.setTabText(2, 'Artificial neural networks')
+
+        # --- Blind Agents
+
+        self.tBlind.setText("<p>Blind agents don't perceive their neighbors and have independant random walks.</p>")
 
         # --- Vicsek Agents
 
-        self.tVicsek.setText("Les agents de Viscek s'alignent par rapport à leurs voisins.")
+        self.tVicsek.setText("<p>Viscek agents align relatively to their closest neighbors: at each time step they align along the mean orientation<br><br>of all the other agents lying in a disk of radius <i>r</i> around themsleves.</p>")
 
         self.tRadius.setText('Interaction radius')
 
         # --- ANN agents
 
-        self.tANN.setText("Les réseaux de neurones ont un champs perceptif radial.")
+        self.tANN.setText("<p>Les réseaux de neurones ont un champs perceptif radial.</p>")
 
         self.cSym.setText('Symmetrization')
         self.bReset.setText('Reset weights')
