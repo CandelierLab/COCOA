@@ -73,8 +73,17 @@ class agent:
     self.engine = engine
     self.v = v
     self.sigma = sigma
-    self.r = r
     self.damax = damax if damax is not None else np.pi/2
+
+    # Viscek
+    self.r = r
+
+    # Percepton
+    self.ns = 4
+    self.w1 = 0
+    self.w2 = 0
+    self.w3 = 0
+    self.w4 = 0
 
     # Initial position
     if initial_position is None:
@@ -177,75 +186,28 @@ class agent:
         # Add angular noise and move
         self.move()
 
+      case 'Perceptron':
 
+         # Update perception
+        self.perceive(i, F)
 
-# === HENN-driven agents ====================================================
+        # Values
+        v = []
+        for k in range(self.ns):
 
-class HENN(agent):
-  '''
-  Hard-encoded neral network agent
-  '''
+          # Indices
+          I = np.where((self.theta>=2*k*np.pi/self.ns) & (self.theta<=2*(k+1)*np.pi/self.ns))
 
-  def __init__(self, v, damax=None, aW=None, aWs=None, vW=None, vWs=None, sigma=0, box=1, initial_position=None):
-    super().__init__(v, sigma, box, damax, initial_position)
-    self.v0 = v
+          if len(self.rho[I]):
+            v.append(np.sum((self.rho[I])**-1))
+          else:
+            v.append(0)
 
-    # --- Angular weights
+        # Update angle
+        self.a += np.tanh(self.w1*v[0] + self.w2*v[1] + self.w3*v[2] + self.w4*v[3])*self.damax
 
-    if aW is None:
-      if aWs is not None:
-        self.aW = aWs + [-x for x in reversed(aWs)]
-      else:
-        raise AttributeError('Weights aW must be specified.')
-    else:
-      self.aW = aW
-
-      # --- Velocity weights
-    
-    if vW is None:
-      if vWs is not None:
-        self.vW = vWs + list(reversed(vWs))
-      else:
-        self.vW = [0]*len(self.aW)
-    else:
-      self.vW = vW
-
-    # Number of slices
-    if len(self.aW)==len(self.vW):
-      self.ns = len(self.aW)
-    else:
-      raise AttributeError('Non-corresponding number of weights')
-
-  def update(self, i, F):
-    '''
-    Update angles and move
-    '''
-
-    # Update perception
-    self.perceive(i, F)
-
-    # Values
-    v = []
-    for k in range(self.ns):
-
-      # Indices
-      I = np.where((self.theta>=2*k*np.pi/self.ns) & (self.theta<=2*(k+1)*np.pi/self.ns))
-
-      # Values
-      if len(self.rho):
-        v.append(np.sum((self.rho[I])**-1))
-        # v.append(np.sum(np.exp(-self.rho[I]/0.5)))
-      else:
-        v.append(0)
-
-    # Update angle
-    self.a += np.tanh(np.sum(np.multiply(self.aW, v)))*self.damax
-    
-    # Update speed
-    self.v = self.v0*(1 + np.tanh(np.sum(np.multiply(self.vW, v))))
-
-    # Add angular noise and move    
-    self.move()
+        # Add angular noise and move    
+        self.move()
 
 # === List of agents =======================================================
 

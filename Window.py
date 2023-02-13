@@ -90,11 +90,11 @@ class Window(QWidget):
 
     tBlind = QWidget()
     tVicsek = QWidget()
-    tANN = QWidget()
+    tPerceptron = QWidget()
 
     self.tType.addTab(tBlind, '')
     self.tType.addTab(tVicsek, '')
-    self.tType.addTab(tANN, '')
+    self.tType.addTab(tPerceptron, '')
 
     
     self.tType.currentChanged.connect(self.animation.changeAgent)
@@ -150,99 +150,110 @@ class Window(QWidget):
 
     tVicsek.setLayout(lVicsek)
 
-    # --- ANN agents
+    # --- Perceptrons
 
-    lANN = QVBoxLayout()
-    lANN.addSpacing(10*f)
+    lPerceptron = QVBoxLayout()
+    lPerceptron.addSpacing(10*f)
 
-    iANN = QLabel()
-    iANN.setPixmap(QPixmap('Images/fr.png'))
-    lANN.addWidget(iANN)
-    lANN.addSpacing(10*f)
+    iPerceptron = QLabel()
+    iPerceptron.setPixmap(QPixmap('Images/Perceptron.png').scaledToHeight(250*f))
+    iPerceptron.setAlignment(Qt.AlignCenter)
+    lPerceptron.addWidget(iPerceptron)
+    lPerceptron.addSpacing(10*f)
 
-    self.tANN = QLabel()
-    lANN.addWidget(self.tANN)
-    lANN.addSpacing(25*f)
+    self.tPerceptron = QLabel()
+    lPerceptron.addWidget(self.tPerceptron)
+    lPerceptron.addSpacing(25*f)
 
-    lANNSettings = QHBoxLayout()
+    lPerceptronSettings = QHBoxLayout()
 
     self.cSym = QCheckBox()
     self.cSym.setChecked(True)
     self.cSym.setStyleSheet("QCheckBox::indicator { width: 25px; height: 25px;}")
-    lANNSettings.addWidget(self.cSym)
+    self.cSym.clicked.connect(self.animation.symmetrize)
+    lPerceptronSettings.addWidget(self.cSym)
 
     self.bReset = QPushButton()
     self.bReset.setFixedSize(QSize(250*f, 25*f))
-    lANNSettings.addWidget(self.bReset)
+    self.bReset.clicked.connect(self.animation.resetWeights)
+    lPerceptronSettings.addWidget(self.bReset)
 
-    lANN.addLayout(lANNSettings)
-    lANN.addSpacing(10*f)
+    lPerceptron.addLayout(lPerceptronSettings)
+    lPerceptron.addSpacing(10*f)
 
-    lANNParam = QGridLayout()
+    lPerceptronParam = QGridLayout()
     
     # W1
     tw1 = QLabel("<span style='font-family: Serif'><i>w<sub>1</sub></i></span> =")
     tw1.setFixedHeight(50*f)
-    lANNParam.addWidget(tw1, 0, 0)
+    lPerceptronParam.addWidget(tw1, 0, 0)
 
     self.lw1 = QLabel('0.00')
-    lANNParam.addWidget(self.lw1, 0, 1)
+    lPerceptronParam.addWidget(self.lw1, 0, 1)
 
     self.sw1 = QSlider(Qt.Horizontal)
     self.sw1.setMinimum(0)
     self.sw1.setMaximum(100)
     self.sw1.setSingleStep(1)
     self.sw1.setValue(50)
-    lANNParam.addWidget(self.sw1, 0, 2)
+    self.sw1.valueChanged.connect(self.animation.setW1)
+    lPerceptronParam.addWidget(self.sw1, 0, 2)
 
     # W2
     tw2 = QLabel("<span style='font-family: Serif'><i>w<sub>2</sub></i></span> =")
     tw2.setFixedHeight(50*f)
-    lANNParam.addWidget(tw2, 1, 0)
+    lPerceptronParam.addWidget(tw2, 1, 0)
 
     self.lw2 = QLabel('0.00')
-    lANNParam.addWidget(self.lw2, 1, 1)
+    lPerceptronParam.addWidget(self.lw2, 1, 1)
 
     self.sw2 = QSlider(Qt.Horizontal)
     self.sw2.setMinimum(0)
     self.sw2.setMaximum(100)
     self.sw2.setSingleStep(1)
     self.sw2.setValue(50)
-    lANNParam.addWidget(self.sw2, 1, 2)
+    self.sw2.valueChanged.connect(self.animation.setW2)
+    lPerceptronParam.addWidget(self.sw2, 1, 2)
 
     # W3
     tw3 = QLabel("<span style='font-family: Serif'><i>w<sub>3</sub></i></span> =")
     tw3.setFixedHeight(50*f)
-    lANNParam.addWidget(tw3, 2, 0)
+    lPerceptronParam.addWidget(tw3, 2, 0)
 
     self.lw3 = QLabel('0.00')
-    lANNParam.addWidget(self.lw3, 2, 1)
+    self.lw3.setDisabled(True)
+    lPerceptronParam.addWidget(self.lw3, 2, 1)
 
     self.sw3 = QSlider(Qt.Horizontal)
     self.sw3.setMinimum(0)
     self.sw3.setMaximum(100)
     self.sw3.setSingleStep(1)
     self.sw3.setValue(50)
-    lANNParam.addWidget(self.sw3, 2, 2)
+    self.sw3.setDisabled(True)
+    self.sw3.valueChanged.connect(self.animation.setW3)
+    lPerceptronParam.addWidget(self.sw3, 2, 2)
 
     # W4
     tw4 = QLabel("<span style='font-family: Serif'><i>w<sub>4</sub></i></span> =")
     tw4.setFixedHeight(50*f)
-    lANNParam.addWidget(tw4, 3, 0)
+    lPerceptronParam.addWidget(tw4, 3, 0)
 
     self.lw4 = QLabel('0.00')
-    lANNParam.addWidget(self.lw4, 3, 1)
+    self.lw4.setDisabled(True)
+    lPerceptronParam.addWidget(self.lw4, 3, 1)
 
     self.sw4 = QSlider(Qt.Horizontal)
     self.sw4.setMinimum(0)
     self.sw4.setMaximum(100)
     self.sw4.setSingleStep(1)
     self.sw4.setValue(50)
-    lANNParam.addWidget(self.sw4, 3, 2)
+    self.sw4.setDisabled(True)
+    self.sw4.valueChanged.connect(self.animation.setW4)
+    lPerceptronParam.addWidget(self.sw4, 3, 2)
 
-    lANN.addLayout(lANNParam)
+    lPerceptron.addLayout(lPerceptronParam)
 
-    tANN.setLayout(lANN)
+    tPerceptron.setLayout(lPerceptron)
 
     # --- Left Menu
 
@@ -323,7 +334,7 @@ class Window(QWidget):
         # Agents
         self.tType.setTabText(0, 'Agents aveugles')
         self.tType.setTabText(1, 'Agents de Vicsek')
-        self.tType.setTabText(2, 'Réseaux de neurones artificiel')
+        self.tType.setTabText(2, 'Perceptrons')
 
         # --- Blind Agents
 
@@ -337,7 +348,7 @@ class Window(QWidget):
 
         # --- ANN agents
 
-        self.tANN.setText("<p>Les réseaux de neurones ont un champs perceptif radial.</p>")
+        self.tPerceptron.setText("<p>Les perceptrons ont un champ perceptif radial. Pour chaque tranche angulaire on calcule un nombre <i>&mu;</i> représentant <br> la proximité des autres agents présents dans la tranche (plus les agents sont proches plus <i>&mu;</i> est grand).<br>Ces nombres servent ensuite d'entrée à un perceptron, un réseau de neurones artificiel très simple dont la sortie<br>donne directement la réorientation de l'agent comme une somme pondérée des entrées.</p>")
 
         self.cSym.setText('Symétrisation')
         self.bReset.setText('Réinitialiser les poids')
@@ -359,7 +370,7 @@ class Window(QWidget):
         # Agents
         self.tType.setTabText(0, 'Blind agents')
         self.tType.setTabText(1, 'Vicsek agents')
-        self.tType.setTabText(2, 'Artificial neural networks')
+        self.tType.setTabText(2, 'Perceptrons')
 
         # --- Blind Agents
 
@@ -373,7 +384,7 @@ class Window(QWidget):
 
         # --- ANN agents
 
-        self.tANN.setText("<p>Les réseaux de neurones ont un champs perceptif radial.</p>")
+        self.tPerceptron.setText("<p>Les réseaux de neurones ont un champs perceptif radial.</p>")
 
         self.cSym.setText('Symmetrization')
         self.bReset.setText('Reset weights')

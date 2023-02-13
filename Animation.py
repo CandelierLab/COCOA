@@ -675,7 +675,7 @@ class Animation(Animation2d):
 
       case 0: self.engine.mode = 'Blind'
       case 1: self.engine.mode = 'Vicsek'
-      case 2: self.engine.mode = 'ANN'
+      case 2: self.engine.mode = 'Perceptron'
 
   def shuffle(self):
 
@@ -707,3 +707,86 @@ class Animation(Animation2d):
 
     for i in range(self.N):
       self.engine.agents.list[i].r = self.window.sRadius.value()*0.002
+
+  def symmetrize(self):
+
+    if self.window.cSym.isChecked():
+      
+      # Symmetrize values
+      self.window.sw4.setValue(100-self.window.sw1.value())
+      self.window.sw3.setValue(100-self.window.sw2.value())
+
+      # Disable weigth
+      self.window.lw3.setDisabled(True)
+      self.window.sw3.setDisabled(True)
+      self.window.lw4.setDisabled(True)
+      self.window.sw4.setDisabled(True)
+
+    else :
+
+      # Enable slide bars
+      self.window.sw3.setDisabled(False)
+      self.window.lw3.setDisabled(False)
+      self.window.sw4.setDisabled(False)
+      self.window.lw4.setDisabled(False)
+
+
+  def resetWeights(self):
+
+    # Sliders
+    self.window.sw1.setValue(50)
+    self.window.sw2.setValue(50)
+    self.window.sw3.setValue(50)
+    self.window.sw4.setValue(50)
+
+    # Text
+    self.window.lw1.setText('0.00')
+    self.window.lw2.setText('0.00')
+    self.window.lw3.setText('0.00')
+    self.window.lw4.setText('0.00')
+
+    for i in range(self.N):
+      self.engine.agents.list[i].w1 = 0
+      self.engine.agents.list[i].w2 = 0
+      self.engine.agents.list[i].w3 = 0
+      self.engine.agents.list[i].w4 = 0
+
+  def setW1(self):
+
+    w1 = (self.window.sw1.value()-50)*0.0001
+    self.window.lw1.setText('{:.02f}'.format(w1*200))
+
+    for i in range(self.N):
+      self.engine.agents.list[i].w1 = w1
+
+    # Symmetrize values
+    if self.window.cSym.isChecked():
+      self.window.sw4.setValue(100-self.window.sw1.value())
+
+  def setW2(self):
+
+    w2 = (self.window.sw2.value()-50)*0.0001
+    self.window.lw2.setText('{:.02f}'.format(w2*200))
+
+    for i in range(self.N):
+      self.engine.agents.list[i].w2 = w2
+
+    # Symmetrize values
+    if self.window.cSym.isChecked():
+      self.window.sw3.setValue(100-self.window.sw2.value())
+
+  def setW3(self):
+
+    w3 = (self.window.sw3.value()-50)*0.0001
+    self.window.lw3.setText('{:.02f}'.format(w3*200))
+
+    for i in range(self.N):
+      self.engine.agents.list[i].w3 = w3
+
+  def setW4(self):
+
+    w4 = (self.window.sw4.value()-50)*0.0001
+    self.window.lw4.setText('{:.02f}'.format(w4*200))
+
+    for i in range(self.N):
+      self.engine.agents.list[i].w4 = w4
