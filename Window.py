@@ -70,18 +70,31 @@ class Window(QWidget):
     self.sSpeed.valueChanged.connect(self.animation.setSpeed)
     lParam.addWidget(self.sSpeed, 0, 1)
 
-    # Orientational noise
-    self.tSigma = QLabel()
-    self.tSigma.setFixedHeight(50*f)
-    lParam.addWidget(self.tSigma, 1, 0)
+    # Perception noise
+    self.tSigma_in = QLabel()
+    self.tSigma_in.setFixedHeight(50*f)
+    lParam.addWidget(self.tSigma_in, 1, 0)
 
-    self.sSigma = QSlider(Qt.Horizontal)
-    self.sSigma.setMinimum(0)
-    self.sSigma.setMaximum(100)
-    self.sSigma.setSingleStep(1)
-    self.sSigma.setValue(20)
-    self.sSigma.valueChanged.connect(self.animation.setSigma)
-    lParam.addWidget(self.sSigma, 1, 1)
+    self.sSigma_in = QSlider(Qt.Horizontal)
+    self.sSigma_in.setMinimum(0)
+    self.sSigma_in.setMaximum(100)
+    self.sSigma_in.setSingleStep(1)
+    self.sSigma_in.setValue(20)
+    self.sSigma_in.valueChanged.connect(self.animation.setSigma_in)
+    lParam.addWidget(self.sSigma_in, 1, 1)
+
+    # Orientation noise
+    self.tSigma_out = QLabel()
+    self.tSigma_out.setFixedHeight(50*f)
+    lParam.addWidget(self.tSigma_out, 2, 0)
+
+    self.sSigma_out = QSlider(Qt.Horizontal)
+    self.sSigma_out.setMinimum(0)
+    self.sSigma_out.setMaximum(100)
+    self.sSigma_out.setSingleStep(1)
+    self.sSigma_out.setValue(20)
+    self.sSigma_out.valueChanged.connect(self.animation.setSigma_out)
+    lParam.addWidget(self.sSigma_out, 2, 1)
     
     # --- Agents type
 
@@ -253,6 +266,24 @@ class Window(QWidget):
 
     lPerceptron.addLayout(lPerceptronParam)
 
+    # delta
+    tdelta = QLabel("<span style='font-family: Serif'><i>δ</i></span> =")
+    tdelta.setFixedHeight(50*f)
+    lPerceptronParam.addWidget(tdelta, 4, 0)
+
+    self.ldelta = QLabel('0.00')
+    lPerceptronParam.addWidget(self.ldelta, 4, 1)
+
+    self.sdelta = QSlider(Qt.Horizontal)
+    self.sdelta.setMinimum(0)
+    self.sdelta.setMaximum(100)
+    self.sdelta.setSingleStep(1)
+    self.sdelta.setValue(50)
+    self.sdelta.valueChanged.connect(self.animation.setDelta)
+    lPerceptronParam.addWidget(self.sdelta, 4, 2)
+
+    lPerceptron.addLayout(lPerceptronParam)
+
     tPerceptron.setLayout(lPerceptron)
 
     # --- Left Menu
@@ -328,8 +359,9 @@ class Window(QWidget):
         # Speed
         self.tSpeed.setText('Vitesse')
 
-        # Orientational noise
-        self.tSigma.setText("Bruit de réorientation")
+        # Noise
+        self.tSigma_in.setText("Bruit de perception")
+        self.tSigma_out.setText("Bruit de réorientation")
 
         # Agents
         self.tType.setTabText(0, 'Agents aveugles')
@@ -364,8 +396,9 @@ class Window(QWidget):
         # Speed
         self.tSpeed.setText('Speed')
 
-        # Orientational noise
-        self.tSigma.setText("Reorientation noise")
+        # Noise
+        self.tSigma_in.setText("Perception noise")
+        self.tSigma_out.setText("Reorientation noise")
 
         # Agents
         self.tType.setTabText(0, 'Blind agents')

@@ -517,10 +517,6 @@ class Animation2d():
     # Items and composite elements
     self.item = {}
 
-    # --- Layout
-
-    # self.layout.addWidget(self.view, 0,0)
-
     # --- Time
 
     self.t = 0
@@ -698,10 +694,15 @@ class Animation(Animation2d):
     for i in range(self.N):
       self.engine.agents.list[i].v = self.window.sSpeed.value()*0.0002
 
-  def setSigma(self):
+  def setSigma_in(self):
 
     for i in range(self.N):
-      self.engine.agents.list[i].sigma = self.window.sSigma.value()*0.005
+      self.engine.agents.list[i].sigma_in = self.window.sSigma_in.value()*0.005
+
+  def setSigma_out(self):
+
+    for i in range(self.N):
+      self.engine.agents.list[i].sigma_out = self.window.sSigma_out.value()*0.005
 
   def setRadius(self):
 
@@ -753,8 +754,9 @@ class Animation(Animation2d):
 
   def setW1(self):
 
-    w1 = (self.window.sw1.value()-50)*0.0001
-    self.window.lw1.setText('{:.02f}'.format(w1*200))
+    # w1 = (self.window.sw1.value()-50)*0.0001
+    w1 = (self.window.sw1.value()-50)/50
+    self.window.lw1.setText('{:.02f}'.format(w1))
 
     for i in range(self.N):
       self.engine.agents.list[i].w1 = w1
@@ -765,8 +767,9 @@ class Animation(Animation2d):
 
   def setW2(self):
 
-    w2 = (self.window.sw2.value()-50)*0.0001
-    self.window.lw2.setText('{:.02f}'.format(w2*200))
+    # w2 = (self.window.sw2.value()-50)*0.0001
+    w2 = (self.window.sw2.value()-50)/50
+    self.window.lw2.setText('{:.02f}'.format(w2))
 
     for i in range(self.N):
       self.engine.agents.list[i].w2 = w2
@@ -777,16 +780,26 @@ class Animation(Animation2d):
 
   def setW3(self):
 
-    w3 = (self.window.sw3.value()-50)*0.0001
-    self.window.lw3.setText('{:.02f}'.format(w3*200))
+    # w3 = (self.window.sw3.value()-50)*0.0001
+    w3 = (self.window.sw3.value()-50)/50
+    self.window.lw3.setText('{:.02f}'.format(w3))
 
     for i in range(self.N):
       self.engine.agents.list[i].w3 = w3
 
   def setW4(self):
 
-    w4 = (self.window.sw4.value()-50)*0.0001
-    self.window.lw4.setText('{:.02f}'.format(w4*200))
+    # w4 = (self.window.sw4.value()-50)*0.0001
+    w4 = (self.window.sw4.value()-50)/50
+    self.window.lw4.setText('{:.02f}'.format(w4))
 
     for i in range(self.N):
       self.engine.agents.list[i].w4 = w4
+
+  def setDelta(self):
+
+    delta = (self.window.sdelta.value()-50)*np.pi/50
+    self.window.ldelta.setText('{:.02f}'.format(delta))
+
+    for i in range(self.N):
+      self.engine.agents.list[i].delta = delta

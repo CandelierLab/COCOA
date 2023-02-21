@@ -3,6 +3,8 @@ from math import *
 import numpy as np
 import time
 
+RNG = np.random.default_rng()
+
 # === Geometry =============================================================
 
 class foop:
@@ -66,14 +68,16 @@ class agent:
   Generic mobile agent (parent class)  
   '''
 
-  def __init__(self, engine, v=0.006, sigma=0.1, r=0.05, damax=None, initial_position=None):
+  def __init__(self, engine, v=0.006, sigma=0.05, r=0.05, damax=None, initial_position=None):
 
     # Definitions
 
     self.engine = engine
     self.v = v
-    self.sigma = sigma
+    self.sigma_in = sigma
+    self.sigma_out = sigma
     self.damax = damax if damax is not None else np.pi/2
+    self.delta = 0
 
     # Viscek
     self.r = r
@@ -147,7 +151,8 @@ class agent:
       I = C.near(r, blindlist=self.blindlist, include_self=include_self)
 
     self.rho = np.abs(Z[I])
-    self.theta = np.mod(np.angle(Z[I]), 2*np.pi)
+
+    self.theta = np.mod(np.angle(Z[I]) + self.sigma_in*RNG.standard_normal(I.size), 2*np.pi)
 
     return I
 
@@ -157,7 +162,7 @@ class agent:
     '''
 
     # Angular noise
-    self.a += self.sigma*np.random.randn(1)
+    self.a += self.sigma_out*RNG.standard_normal(1)
 
     # Position
     self.x = ((self.x + self.v*np.cos(self.a)) % 1)[0]
@@ -196,12 +201,18 @@ class agent:
         for k in range(self.ns):
 
           # Indices
-          I = np.where((self.theta>=2*k*np.pi/self.ns) & (self.theta<=2*(k+1)*np.pi/self.ns))
+          # I = np.where((self.theta>=2*k*np.pi/self.ns) & (self.theta<=2*(k+1)*np.pi/self.ns))
+
+          theta = np.mod(self.theta-self.delta, 2*np.pi)
+          I = np.where((theta>=2*k*np.pi/self.ns) & (theta<=2*(k+1)*np.pi/self.ns))
 
           if len(self.rho[I]):
             v.append(np.sum((self.rho[I])**-1))
           else:
             v.append(0)
+
+        # Renormalization
+        v /= np.sum(v)
 
         # Update angle
         self.a += np.tanh(self.w1*v[0] + self.w2*v[1] + self.w3*v[2] + self.w4*v[3])*self.damax
