@@ -324,35 +324,8 @@ class Engine:
       if self.verbose:
         print('→ End of simulation @ {:d} steps ({:.2f} s)'.format(self.steps, time.time()-self.tref))
 
-      # End display
-      if self.display is not None:
-        self.display.stop()
-
     self.iteration += 1
 
-  def run(self):
-    '''
-    Run the simulation
-    '''
-
-    # Check default number of frames in case of export
-    if self.data_out is not None and self.steps is None:
-      self.steps = 250
-      if self.verbose:
-        print('Number of steps set to the default value ({}).'.format(self.steps))
-
-    # Reference time
-    self.tref = time.time()
-
-    # --- Main loop --------------------------------------------------------
-
-    if self.display is None:
-      i = 0
-      while self.steps is None or i<self.steps:
-        self.step(i)
-        i += 1
-
-    else:
-      self.display.animate()
-
+ 
+    
     

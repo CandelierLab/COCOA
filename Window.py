@@ -49,8 +49,14 @@ class Window(QWidget):
     self.bShuffle.setFixedHeight(50*f)
     self.bShuffle.clicked.connect(self.animation.shuffle)
 
+    self.bPlay = QPushButton()
+    self.bPlay.setFixedHeight(50*f)
+    self.bPlay.setCheckable(True)
+
+    lShuffle.addStretch(3)
+    lShuffle.addWidget(self.bShuffle, 3)
     lShuffle.addStretch(1)
-    lShuffle.addWidget(self.bShuffle, 1)
+    lShuffle.addWidget(self.bPlay, 3)
     lShuffle.addStretch(1)
 
     # --- General parameters
@@ -59,7 +65,7 @@ class Window(QWidget):
 
     # Speed
     self.tSpeed = QLabel()
-    self.tSpeed.setFixedHeight(50*f)
+    self.tSpeed.setFixedHeight(30*f)
     lParam.addWidget(self.tSpeed, 0, 0)
 
     self.sSpeed = QSlider(Qt.Horizontal)
@@ -72,7 +78,7 @@ class Window(QWidget):
 
     # Perception noise
     self.tSigma_in = QLabel()
-    self.tSigma_in.setFixedHeight(50*f)
+    self.tSigma_in.setFixedHeight(30*f)
     lParam.addWidget(self.tSigma_in, 1, 0)
 
     self.sSigma_in = QSlider(Qt.Horizontal)
@@ -85,7 +91,7 @@ class Window(QWidget):
 
     # Orientation noise
     self.tSigma_out = QLabel()
-    self.tSigma_out.setFixedHeight(50*f)
+    self.tSigma_out.setFixedHeight(30*f)
     lParam.addWidget(self.tSigma_out, 2, 0)
 
     self.sSigma_out = QSlider(Qt.Horizontal)
@@ -109,9 +115,7 @@ class Window(QWidget):
     self.tType.addTab(tVicsek, '')
     self.tType.addTab(tPerceptron, '')
 
-    
     self.tType.currentChanged.connect(self.animation.changeAgent)
-    # self.tType.setCurrentIndex(1)
 
     # --- Blind agents
 
@@ -353,8 +357,9 @@ class Window(QWidget):
         # Window title
         self.setWindowTitle('Comportement Collectif Artificiel')
 
-        # Randomization
+        # Upper commands
         self.bShuffle.setText('Répartir aléatoirement')
+        self.bPlay.setText('Pause')
 
         # Speed
         self.tSpeed.setText('Vitesse')
@@ -392,6 +397,7 @@ class Window(QWidget):
 
         # Randomization
         self.bShuffle.setText('Shuffle agents')
+        self.bPlay.setText('Pause')
 
         # Speed
         self.tSpeed.setText('Speed')

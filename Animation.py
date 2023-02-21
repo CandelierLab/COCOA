@@ -650,6 +650,9 @@ class Animation(Animation2d):
 
   def update(self):
 
+    if self.window.bPlay.isChecked():
+      return
+
     # Superclass method
     super().update()
 
