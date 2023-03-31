@@ -76,18 +76,18 @@ class Window(QWidget):
     self.sSpeed.valueChanged.connect(self.animation.setSpeed)
     lParam.addWidget(self.sSpeed, 0, 1)
 
-    # Perception noise
-    self.tSigma_in = QLabel()
-    self.tSigma_in.setFixedHeight(30*f)
-    lParam.addWidget(self.tSigma_in, 1, 0)
+    # # Perception noise
+    # self.tSigma_in = QLabel()
+    # self.tSigma_in.setFixedHeight(30*f)
+    # lParam.addWidget(self.tSigma_in, 1, 0)
 
-    self.sSigma_in = QSlider(Qt.Horizontal)
-    self.sSigma_in.setMinimum(0)
-    self.sSigma_in.setMaximum(100)
-    self.sSigma_in.setSingleStep(1)
-    self.sSigma_in.setValue(20)
-    self.sSigma_in.valueChanged.connect(self.animation.setSigma_in)
-    lParam.addWidget(self.sSigma_in, 1, 1)
+    # self.sSigma_in = QSlider(Qt.Horizontal)
+    # self.sSigma_in.setMinimum(0)
+    # self.sSigma_in.setMaximum(100)
+    # self.sSigma_in.setSingleStep(1)
+    # self.sSigma_in.setValue(20)
+    # self.sSigma_in.valueChanged.connect(self.animation.setSigma_in)
+    # lParam.addWidget(self.sSigma_in, 1, 1)
 
     # Orientation noise
     self.tSigma_out = QLabel()
@@ -365,7 +365,7 @@ class Window(QWidget):
         self.tSpeed.setText('Vitesse')
 
         # Noise
-        self.tSigma_in.setText("Bruit de perception")
+        # self.tSigma_in.setText("Bruit de perception")
         self.tSigma_out.setText("Bruit de réorientation")
 
         # Agents
@@ -403,7 +403,7 @@ class Window(QWidget):
         self.tSpeed.setText('Speed')
 
         # Noise
-        self.tSigma_in.setText("Perception noise")
+        # self.tSigma_in.setText("Perception noise")
         self.tSigma_out.setText("Reorientation noise")
 
         # Agents

@@ -691,16 +691,15 @@ class Animation(Animation2d):
       c = colorsys.hsv_to_rgb(self.engine.agents.list[i].x, 1, 1)
       self.item[i].colors = [QColor(int(c[0]*255), int(c[1]*255), int(c[2]*255)), QColor(int(c[0]*255), int(c[1]*255), int(c[2]*255))]
 
-
   def setSpeed(self):
 
     for i in range(self.N):
       self.engine.agents.list[i].v = self.window.sSpeed.value()*0.0002
 
-  def setSigma_in(self):
+  # def setSigma_in(self):
 
-    for i in range(self.N):
-      self.engine.agents.list[i].sigma_in = self.window.sSigma_in.value()*0.005
+  #   for i in range(self.N):
+  #     self.engine.agents.list[i].sigma_in = self.window.sSigma_in.value()*0.005
 
   def setSigma_out(self):
 
@@ -733,7 +732,6 @@ class Animation(Animation2d):
       self.window.lw3.setDisabled(False)
       self.window.sw4.setDisabled(False)
       self.window.lw4.setDisabled(False)
-
 
   def resetWeights(self):
 

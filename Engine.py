@@ -74,7 +74,7 @@ class agent:
 
     self.engine = engine
     self.v = v
-    self.sigma_in = sigma
+    # self.sigma_in = sigma
     self.sigma_out = sigma
     self.damax = damax if damax is not None else np.pi/2
     self.delta = 0
@@ -152,7 +152,8 @@ class agent:
 
     self.rho = np.abs(Z[I])
 
-    self.theta = np.mod(np.angle(Z[I]) + self.sigma_in*RNG.standard_normal(I.size), 2*np.pi)
+    # self.theta = np.mod(np.angle(Z[I])+ self.sigma_in*RNG.standard_normal(I.size), 2*np.pi)
+    self.theta = np.mod(np.angle(Z[I]), 2*np.pi)
 
     return I
 
