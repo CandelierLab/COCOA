@@ -1,6 +1,6 @@
 from PyQt5.QtCore import Qt, QSize
 from PyQt5.QtGui import QKeySequence, QPixmap, QPalette, QColor
-from PyQt5.QtWidgets import QApplication, QWidget, QShortcut, QGridLayout, QHBoxLayout, QVBoxLayout, QPushButton, QLabel, QSlider, QTabWidget, QCheckBox
+from PyQt5.QtWidgets import QApplication, QWidget, QShortcut, QGridLayout, QHBoxLayout, QVBoxLayout, QPushButton, QLabel, QSlider, QTabWidget, QCheckBox, QStyle, QProxyStyle
 import qdarkstyle
 
 from Animation import Animation
@@ -21,7 +21,23 @@ class Window(QWidget):
     self.language = 'fr'
 
     # Style
-    self.app.setStyleSheet(qdarkstyle.load_stylesheet())
+    QSS = qdarkstyle.load_stylesheet()
+    QSS += """
+      /* QSlider --------------------------------------  */
+      QSlider::handle:horizontal {
+          height: 40px;
+          width: 40px;
+          margin: -20px 0;
+          border-radius: 20px;
+          padding: -20px 0px;
+      }
+      QSlider::handle:horizontal:hover {
+          background-color: rgb(200, 200, 200);
+      }
+      QSlider::handle:horizontal:pressed {
+          background-color: rgb(255, 255, 255);
+      }"""
+    self.app.setStyleSheet(QSS)
 
     # --- Fullscreen
     
@@ -109,10 +125,12 @@ class Window(QWidget):
 
     tBlind = QWidget()
     tVicsek = QWidget()
+    tAoki = QWidget()
     tPerceptron = QWidget()
 
     self.tType.addTab(tBlind, '')
     self.tType.addTab(tVicsek, '')
+    self.tType.addTab(tAoki, '')
     self.tType.addTab(tPerceptron, '')
 
     self.tType.currentChanged.connect(self.animation.changeAgent)
@@ -151,9 +169,12 @@ class Window(QWidget):
     lVicsekParam = QGridLayout()
     
     # Radius of interaction
-    self.tRadius = QLabel()
+    self.tRadius = QLabel("<span style='font-family: Serif'><i>r</i></span> =")
     self.tRadius.setFixedHeight(50*f)
     lVicsekParam.addWidget(self.tRadius, 0, 0)
+
+    self.lRadius = QLabel('0.050')
+    lVicsekParam.addWidget(self.lRadius, 0, 1)
 
     self.sRadius = QSlider(Qt.Horizontal)
     self.sRadius.setMinimum(0)
@@ -161,11 +182,96 @@ class Window(QWidget):
     self.sRadius.setSingleStep(1)
     self.sRadius.setValue(25)
     self.sRadius.valueChanged.connect(self.animation.setRadius)
-    lVicsekParam.addWidget(self.sRadius, 0, 1)
+    lVicsekParam.addWidget(self.sRadius, 0, 2)
 
     lVicsek.addLayout(lVicsekParam)
 
     tVicsek.setLayout(lVicsek)
+
+    # --- Aoki-Couzin agents
+
+    lAoki = QVBoxLayout()
+    lAoki.addSpacing(25*f)
+
+    iAoki = QLabel()
+    iAoki.setPixmap(QPixmap('Images/Aoki-Couzin.png').scaledToHeight(300*f))
+    iAoki.setAlignment(Qt.AlignCenter)
+    lAoki.addWidget(iAoki)
+    lAoki.addSpacing(25*f)
+
+    self.tAoki = QLabel()
+    lAoki.addWidget(self.tAoki)
+    lAoki.addSpacing(25*f)
+
+    lAokiParam = QGridLayout()
+    
+    # Rrep
+    tRrep = QLabel("<span style='font-family: Serif'><i>r<sub>rep</sub></i></span> =")
+    tRrep.setFixedHeight(50*f)
+    lAokiParam.addWidget(tRrep, 0, 0)
+
+    self.lRrep = QLabel('0.025')
+    lAokiParam.addWidget(self.lRrep, 0, 1)
+
+    self.sRrep = QSlider(Qt.Horizontal)
+    self.sRrep.setMinimum(0)
+    self.sRrep.setMaximum(100)
+    self.sRrep.setSingleStep(1)
+    self.sRrep.setValue(5)
+    self.sRrep.valueChanged.connect(self.animation.setRrep)
+    lAokiParam.addWidget(self.sRrep, 0, 2)
+
+    # Ral
+    tRal = QLabel("<span style='font-family: Serif'><i>r<sub>al</sub></i></span> =")
+    tRal.setFixedHeight(50*f)
+    lAokiParam.addWidget(tRal, 1, 0)
+
+    self.lRal = QLabel('0.125')
+    lAokiParam.addWidget(self.lRal, 1, 1)
+
+    self.sRal = QSlider(Qt.Horizontal)
+    self.sRal.setMinimum(0)
+    self.sRal.setMaximum(100)
+    self.sRal.setSingleStep(1)
+    self.sRal.setValue(25)
+    self.sRal.valueChanged.connect(self.animation.setRal)
+    lAokiParam.addWidget(self.sRal, 1, 2)
+
+    # Ratt
+    tRatt = QLabel("<span style='font-family: Serif'><i>r<sub>att</sub></i></span> =")
+    tRatt.setFixedHeight(50*f)
+    lAokiParam.addWidget(tRatt, 2, 0)
+
+    self.lRatt = QLabel('0.250')
+    lAokiParam.addWidget(self.lRatt, 2, 1)
+
+    self.sRatt = QSlider(Qt.Horizontal)
+    self.sRatt.setMinimum(0)
+    self.sRatt.setMaximum(100)
+    self.sRatt.setSingleStep(1)
+    self.sRatt.setValue(50)
+    self.sRatt.valueChanged.connect(self.animation.setRatt)
+    lAokiParam.addWidget(self.sRatt, 2, 2)
+
+    # Alpha
+    talpha = QLabel("<span style='font-family: Serif'><i>α</i></span> =")
+    talpha.setFixedHeight(50*f)
+    lAokiParam.addWidget(talpha, 3, 0)
+
+    self.lalpha = QLabel('0.785')
+    lAokiParam.addWidget(self.lalpha, 3, 1)
+
+    self.salpha = QSlider(Qt.Horizontal)
+    self.salpha.setMinimum(0)
+    self.salpha.setMaximum(100)
+    self.salpha.setSingleStep(1)
+    self.salpha.setValue(25)
+    self.salpha.valueChanged.connect(self.animation.setAlpha)
+    lAokiParam.addWidget(self.salpha, 3, 2)
+
+    lAoki.addLayout(lAokiParam)
+
+    tAoki.setLayout(lAoki)
 
     # --- Perceptrons
 
@@ -371,7 +477,8 @@ class Window(QWidget):
         # Agents
         self.tType.setTabText(0, 'Agents aveugles')
         self.tType.setTabText(1, 'Agents de Vicsek')
-        self.tType.setTabText(2, 'Perceptrons')
+        self.tType.setTabText(2, "Agents d'Aoki-Couzin")
+        self.tType.setTabText(3, 'Perceptrons')
 
         # --- Blind Agents
 
@@ -381,8 +488,10 @@ class Window(QWidget):
 
         self.tVicsek.setText("<p>Les agents de Viscek s'alignent par rapport à leurs voisins proches: à chaque instant ils prennent l'orientation<br><br>moyenne  de tous les agents situés dans un rayon <i>r</i> donné autour d'eux.</p>")
         
-        self.tRadius.setText("Rayon d'interaction")
+        # --- Aoki-Couzin Agents
 
+        self.tAoki.setText("<p>Les agents d'Aoki-Couzin ont 3 zones concentriques autour d'eux: la plus proche est une zone de répulsion,<br><br> la deuxième est une zone d'alignement et la dernière, et la plus éloignée, est une zone d'attraction.</p>")
+        
         # --- ANN agents
 
         self.tPerceptron.setText("<p>Les perceptrons ont un champ perceptif radial. Pour chaque tranche angulaire on calcule un nombre <i>&mu;</i> représentant <br> la proximité des autres agents présents dans la tranche (plus les agents sont proches plus <i>&mu;</i> est grand).<br>Ces nombres servent ensuite d'entrée à un perceptron, un réseau de neurones artificiel très simple dont la sortie<br>donne directement la réorientation de l'agent comme une somme pondérée des entrées.</p>")
@@ -409,7 +518,8 @@ class Window(QWidget):
         # Agents
         self.tType.setTabText(0, 'Blind agents')
         self.tType.setTabText(1, 'Vicsek agents')
-        self.tType.setTabText(2, 'Perceptrons')
+        self.tType.setTabText(2, 'Aoki-Couzin agents')
+        self.tType.setTabText(3, 'Perceptrons')
 
         # --- Blind Agents
 
@@ -419,7 +529,9 @@ class Window(QWidget):
 
         self.tVicsek.setText("<p>Viscek agents align relatively to their closest neighbors: at each time step they align along the mean orientation<br><br>of all the other agents lying in a disk of radius <i>r</i> around themsleves.</p>")
 
-        self.tRadius.setText('Interaction radius')
+        # --- Aoki-Couzin Agents
+
+        self.tAoki.setText("<p>Aoki-Couzin agents have 3 concentric zones around them: the closest is a repulsion zone,<br><br> the second is an alignment zone and the last, and furthest, is an attraction zone.</p>")
 
         # --- ANN agents
 

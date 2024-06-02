@@ -674,7 +674,8 @@ class Animation(Animation2d):
 
       case 0: self.engine.mode = 'Blind'
       case 1: self.engine.mode = 'Vicsek'
-      case 2: self.engine.mode = 'Perceptron'
+      case 2: self.engine.mode = 'Aoki-Couzin'
+      case 3: self.engine.mode = 'Perceptron'
 
   def shuffle(self):
 
@@ -708,8 +709,64 @@ class Animation(Animation2d):
 
   def setRadius(self):
 
+    r = self.window.sRadius.value()*0.002
+    self.window.lRadius.setText('{:.03f}'.format(r))
+
     for i in range(self.N):
-      self.engine.agents.list[i].r = self.window.sRadius.value()*0.002
+      self.engine.agents.list[i].r = r
+
+  def setRrep(self):
+
+    r = self.window.sRrep.value()/200
+    rmax = self.window.sRal.value()/200
+
+    if r>rmax:
+      r = rmax
+      self.window.sRrep.setValue(self.window.sRal.value())
+
+    self.window.lRrep.setText('{:.03f}'.format(r))
+
+    for i in range(self.N):
+      self.engine.agents.list[i].Rrep = r
+
+  def setRal(self):
+
+    rmin = self.window.sRrep.value()/200
+    r = self.window.sRal.value()/200
+    rmax = self.window.sRatt.value()/200
+
+    if r<rmin:
+      self.window.sRrep.setValue(self.window.sRal.value())
+
+    if r>rmax:
+      r = rmax
+      self.window.sRal.setValue(self.window.sRatt.value())
+
+    self.window.lRal.setText('{:.03f}'.format(r))
+
+    for i in range(self.N):
+      self.engine.agents.list[i].Ral = r
+
+  def setRatt(self):
+
+    rmin = self.window.sRal.value()/200
+    r = self.window.sRatt.value()/200
+
+    if r<rmin:
+      self.window.sRal.setValue(self.window.sRatt.value())
+
+    self.window.lRatt.setText('{:.03f}'.format(r))
+
+    for i in range(self.N):
+      self.engine.agents.list[i].Ratt = r
+
+  def setAlpha(self):
+
+    a = self.window.salpha.value()*np.pi/200
+    self.window.lalpha.setText('{:.03f}'.format(a))
+
+    for i in range(self.N):
+      self.engine.agents.list[i].alpha = a
 
   def symmetrize(self):
 

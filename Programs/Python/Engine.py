@@ -82,6 +82,12 @@ class agent:
     # Viscek
     self.r = r
 
+    # Aoki-Couzin
+    self.Rrep = 0.005
+    self.Ral = 0.125
+    self.Ratt = 0.25
+    self.alpha = np.pi/4
+
     # Percepton
     self.ns = 4
     self.w1 = 0
@@ -151,8 +157,6 @@ class agent:
       I = C.near(r, blindlist=self.blindlist, include_self=include_self)
 
     self.rho = np.abs(Z[I])
-
-    # self.theta = np.mod(np.angle(Z[I])+ self.sigma_in*RNG.standard_normal(I.size), 2*np.pi)
     self.theta = np.mod(np.angle(Z[I]), 2*np.pi)
 
     return I
@@ -185,6 +189,19 @@ class agent:
 
         # Update perception
         I = self.perceive(i, F, r=self.r, reorient=False, include_self=True)
+        
+        # Update angle
+        self.a = np.angle(np.exp(1j*F.A[I]).sum())
+
+        # Add angular noise and move
+        self.move()
+
+      case 'Aoki-Couzin':
+
+        # !!! TO DO !!!
+
+        # Update perception
+        I = self.perceive(i, F)
         
         # Update angle
         self.a = np.angle(np.exp(1j*F.A[I]).sum())
