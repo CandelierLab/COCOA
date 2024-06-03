@@ -76,7 +76,7 @@ class agent:
     self.v = v
     # self.sigma_in = sigma
     self.sigma_out = sigma
-    self.damax = damax if damax is not None else np.pi/2
+    self.damax = damax if damax is not None else np.pi/6
     self.delta = 0
 
     # Viscek
@@ -198,13 +198,57 @@ class agent:
 
       case 'Aoki-Couzin':
 
-        # !!! TO DO !!!
-
         # Update perception
-        I = self.perceive(i, F)
-        
+        K = self.perceive(i, F)
+
+        # --- Blind sector
+
+        I = (self.theta<np.pi-self.alpha) | (self.theta>np.pi+self.alpha)
+        rho = self.rho[I]
+        theta = self.theta[I]
+        beta = F.A[K][I]
+
+        # --- Indices and regions
+
+        Irep = rho<=self.Rrep
+        Ial = (rho>self.Rrep) & (rho<=self.Ral)
+        Iatt = (rho>self.Ral) & (rho<=self.Ratt)
+
+        Nrep = np.count_nonzero(Irep)
+        Nal = np.count_nonzero(Ial)
+        Natt = np.count_nonzero(Iatt)
+
+        if Nrep:
+
+          # Reorientation
+          da = np.angle(-np.sum(np.exp(1j*theta[Irep])))
+          
+        else:
+
+          if Nal & Natt:
+
+            dal = np.angle(np.sum(np.exp(1j*beta[Ial])))
+            dal = np.mod(dal - self.a + np.pi, 2*np.pi) - np.pi
+            datt = np.angle(np.sum(np.exp(1j*theta[Iatt])))
+            da = np.angle(np.exp(1j*dal) + np.exp(1j*datt))
+
+          elif Nal:
+            
+            dal = np.angle(np.sum(np.exp(1j*beta[Ial])))
+            da = np.mod(dal - self.a + np.pi, 2*np.pi) - np.pi
+
+          elif Natt:
+
+            da = np.angle(np.sum(np.exp(1j*theta[Iatt])))
+
+          else:
+
+            da = 0
+
         # Update angle
-        self.a = np.angle(np.exp(1j*F.A[I]).sum())
+        if np.abs(da)>self.damax:
+          da = self.damax*np.sign(da)
+        self.a += da
 
         # Add angular noise and move
         self.move()
