@@ -7,8 +7,10 @@ from Animation import Animation
 
 class Window(QWidget):
   
-  def __init__(self, N):
+  def __init__(self, N, darkstyle=True):
    
+    self.darkstyle = darkstyle
+
     # Qapplication
     self.app = QApplication([])
 
@@ -21,44 +23,43 @@ class Window(QWidget):
     self.language = 'fr'
 
     # Style
-    QSS = qdarkstyle.load_stylesheet()
-    QSS += """
-      /* QSlider --------------------------------------  */
-      QSlider::handle:horizontal {
-          height: 40px;
-          width: 40px;
-          margin: -20px 0;
-          border-radius: 20px;
-          padding: -20px 0px;
-      }
-      QSlider::handle:horizontal:hover {
-          background-color: rgb(200, 200, 200);
-      }
-      QSlider::handle:horizontal:pressed {
-          background-color: rgb(255, 255, 255);
-      }"""
-    self.app.setStyleSheet(QSS)
+    if self.darkstyle:
+      QSS = qdarkstyle.load_stylesheet()
+      QSS += """
+        /* QSlider --------------------------------------  */
+        QSlider::handle:horizontal {
+            height: 40px;
+            width: 40px;
+            margin: -20px 0;
+            border-radius: 20px;
+            padding: -20px 0px;
+        }
+        QSlider::handle:horizontal:hover {
+            background-color: rgb(200, 200, 200);
+        }
+        QSlider::handle:horizontal:pressed {
+            background-color: rgb(255, 255, 255);
+        }"""
+      self.app.setStyleSheet(QSS)
 
     # --- Fullscreen
     
     # Check screen size
     screen = self.app.primaryScreen()
+    # screen = self.app.secondaryScreen()
     if screen.size().width()>=3840:
       f = 2
       self.setGeometry(0,0,1920*f, 1080*f)      
     else:
       f = 1
-      self.setWindowState(Qt.WindowFullScreen)
+      # self.setWindowState(Qt.WindowFullScreen)
 
     # --- Animation --------------------------------------------------------
 
-    self.animation = Animation(self, N)
+    self.animation = Animation(self, N, darkstyle=self.darkstyle)
     self.animation.shuffle()
 
-    # --- Layouts & Widgets ------------------------------------------------
-
-    # --- Shuffle
-         
+    # --- Layouts & Widgets ---------------------move windo
     lShuffle = QHBoxLayout()
 
     self.bShuffle = QPushButton()
@@ -141,7 +142,10 @@ class Window(QWidget):
     lBlind.addSpacing(25*f)
 
     iBlind = QLabel()
-    iBlind.setPixmap(QPixmap('Images/Blind.png').scaledToHeight(200*f))
+    if self.darkstyle:
+      iBlind.setPixmap(QPixmap('Images/Blind_dark.png').scaledToHeight(200*f))
+    else:
+      iBlind.setPixmap(QPixmap('Images/Blind.png').scaledToHeight(200*f))
     iBlind.setAlignment(Qt.AlignCenter)
     lBlind.addWidget(iBlind)
     lBlind.addSpacing(25*f)

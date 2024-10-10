@@ -500,7 +500,7 @@ class view(QGraphicsView):
 
 class Animation2d():
   
-  def __init__(self, parent=None, size=None, boundaries=None, disp_boundaries=True, disp_time=False, dt=None):
+  def __init__(self, parent=None, size=None, boundaries=None, disp_boundaries=True, disp_time=False, dt=None, darkstyle=True):
   
     # --- Parent
 
@@ -516,6 +516,9 @@ class Animation2d():
 
     # Items and composite elements
     self.item = {}
+
+    # Window style
+    self.darkstyle = darkstyle
 
     # --- Time
 
@@ -550,10 +553,11 @@ class Animation2d():
     # --- Display
 
     # Dark background
-    self.view.setBackgroundBrush(Qt.black)
-    pal = self.view.palette()
-    pal.setColor(QPalette.Window, Qt.black)
-    self.view.setPalette(pal)
+    if self.darkstyle:
+      self.view.setBackgroundBrush(Qt.black)
+      pal = self.view.palette()
+      pal.setColor(QPalette.Window, Qt.black)
+      self.view.setPalette(pal)
 
     # Antialiasing
     self.view.setRenderHints(QPainter.Antialiasing)
@@ -616,10 +620,10 @@ class Animation2d():
 
 class Animation(Animation2d):
 
-  def __init__(self, window, N):
+  def __init__(self, window, N, darkstyle=True):
 
     # Superclass constructor
-    super().__init__()
+    super().__init__(darkstyle=darkstyle)
 
     # Associated window
     self.window = window
@@ -690,7 +694,10 @@ class Animation(Animation2d):
 
       # Colors
       c = colorsys.hsv_to_rgb(self.engine.agents.list[i].x, 1, 1)
-      self.item[i].colors = [QColor(int(c[0]*255), int(c[1]*255), int(c[2]*255)), QColor(int(c[0]*255), int(c[1]*255), int(c[2]*255))]
+      if self.darkstyle:
+        self.item[i].colors = [QColor(int(c[0]*255), int(c[1]*255), int(c[2]*255)), QColor(int(c[0]*255), int(c[1]*255), int(c[2]*255))]
+      else:
+        self.item[i].colors = [QColor(int(c[0]*255), int(c[1]*255), int(c[2]*255)), QColor(0,0,0)]
 
   def setSpeed(self):
 
