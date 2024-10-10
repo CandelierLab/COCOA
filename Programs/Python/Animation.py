@@ -641,7 +641,7 @@ class Animation(Animation2d):
 
     # --- Animation
 
-    s = 0.01
+    s = 0.011
 
     for i in range(N):
 
@@ -649,7 +649,8 @@ class Animation(Animation2d):
         position = [self.engine.agents.list[i].x, self.engine.agents.list[i].y],
         orientation = self.engine.agents.list[i].a,
         points = [[s,0],[-s/2,s/2],[-s/2,-s/2]],
-        colors = ['red', 'red']
+        colors = ['red', 'red'],
+        thickness = 2
       )
 
   def update(self):

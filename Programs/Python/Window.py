@@ -161,7 +161,11 @@ class Window(QWidget):
     lVicsek.addSpacing(25*f)
 
     iVicsek = QLabel()
-    iVicsek.setPixmap(QPixmap('Images/Vicsek.png').scaledToHeight(200*f))
+    if self.darkstyle:
+      iVicsek.setPixmap(QPixmap('Images/Vicsek_dark.png').scaledToHeight(200*f))
+    else:
+      iVicsek.setPixmap(QPixmap('Images/Vicsek.png').scaledToHeight(200*f))
+
     iVicsek.setAlignment(Qt.AlignCenter)
     lVicsek.addWidget(iVicsek)
     lVicsek.addSpacing(25*f)
@@ -198,7 +202,11 @@ class Window(QWidget):
     lAoki.addSpacing(25*f)
 
     iAoki = QLabel()
-    iAoki.setPixmap(QPixmap('Images/Aoki-Couzin.png').scaledToHeight(300*f))
+    if self.darkstyle:
+      iAoki.setPixmap(QPixmap('Images/Aoki-Couzin_dark.png').scaledToHeight(300*f))
+    else:
+      iAoki.setPixmap(QPixmap('Images/Aoki-Couzin.png').scaledToHeight(300*f))
+
     iAoki.setAlignment(Qt.AlignCenter)
     lAoki.addWidget(iAoki)
     lAoki.addSpacing(25*f)
@@ -283,7 +291,11 @@ class Window(QWidget):
     lPerceptron.addSpacing(10*f)
 
     iPerceptron = QLabel()
-    iPerceptron.setPixmap(QPixmap('Images/Perceptron.png').scaledToHeight(250*f))
+    if self.darkstyle:
+      iPerceptron.setPixmap(QPixmap('Images/Perceptron_dark.png').scaledToHeight(250*f))
+    else:
+      iPerceptron.setPixmap(QPixmap('Images/Perceptron.png').scaledToHeight(250*f))
+
     iPerceptron.setAlignment(Qt.AlignCenter)
     lPerceptron.addWidget(iPerceptron)
     lPerceptron.addSpacing(10*f)
